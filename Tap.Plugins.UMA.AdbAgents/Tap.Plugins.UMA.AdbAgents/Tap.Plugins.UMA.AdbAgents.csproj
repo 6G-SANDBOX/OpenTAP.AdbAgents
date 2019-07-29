@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\Program Files\Keysight\TAP8\UMA\</OutputPath>
+    <OutputPath>$(TAP_PATH)\UMA\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\Program Files\Keysight\TAP8\UMA\</OutputPath>
+    <OutputPath>$(TAP_PATH)\UMA\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -46,7 +46,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Tap.Plugins.UMA.Android">
-      <HintPath>..\..\..\..\Program Files\Keysight\TAP8\UMA\Tap.Plugins.UMA.Android.dll</HintPath>
+      <HintPath>$(TAP_PATH)\UMA\Tap.Plugins.UMA.Android.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
