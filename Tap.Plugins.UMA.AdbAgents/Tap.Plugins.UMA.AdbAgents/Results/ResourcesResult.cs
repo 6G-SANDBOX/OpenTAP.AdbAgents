@@ -11,9 +11,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Tap.Plugins.UMA.AdbAgents.Steps
+namespace Tap.Plugins.UMA.AdbAgents.Results
 {
-    public struct ResourcesResult
+    public class ResourcesResult : ResultBase
     {
         private static readonly string DATETIME = @"(\d+-\d+ \d+:\d+:\d+.\d+)";
         private static readonly string FLOAT = @"((\d+)([.,]\d+)*)";
@@ -35,9 +35,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             "Operator", "Network", "Cell ID", "LAC", "RSSI", "PSC", "SNR", "RSRP", "RSRQ", "CQI"
         };
 
-        public bool Valid;
-        public DateTime LogTime;
-        public ulong Timestamp;
+        public override string[] GetColumns() { return COLUMNS; }
 
         public double UsedCpuPerCent;
         public int UsedRam;
@@ -60,6 +58,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         public int? Snr;
         public int? Cqi;
         public int? Rsrq;
+
+        public ResourcesResult() : this(string.Empty) { }
 
         public ResourcesResult(string line)
         {
@@ -112,16 +112,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             return false;
         }
 
-        private int? maybeInt(string value)
-        {
-            if (int.TryParse(value, out int result))
-            {
-                return result;
-            }
-            return null;
-        }
-
-        public IConvertible GetValue(string column)
+        public override IConvertible GetValue(string column)
         {
             switch (column)
             {

@@ -57,9 +57,11 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Instruments\ResourceAgentInstrument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\ResultBase.cs" />
+    <Compile Include="Steps\AdbAgentBaseStep.cs" />
     <Compile Include="Steps\AdbResourceAgentStep.cs" />
     <Compile Include="Steps\MeasurementStepBase.cs" />
-    <Compile Include="Steps\ResourcesResult.cs" />
+    <Compile Include="Results\ResourcesResult.cs" />
     <None Include="package.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
