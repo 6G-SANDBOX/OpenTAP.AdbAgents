@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 namespace Tap.Plugins.UMA.Extensions
+{ 
     public static class SecureStringExtensions
     {
         // https://stackoverflow.com/a/819705

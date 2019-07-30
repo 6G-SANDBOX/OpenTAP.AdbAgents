@@ -17,7 +17,7 @@ using Tap.Plugins.UMA.Extensions;
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
     [Display("Adb Resource Agent", Groups: new string[] { "UMA", "Agents" })]
-    public class AdbResourceAgentStep : TestStep
+    public class AdbResourceAgentStep : MeasurementStepBase
     {
         private static readonly string DEVICE_FILE = "sdcard/adb_res_mon.log";
         private static readonly string AGENT_TAG = "resourceAgent.ResourceAgentTask";
@@ -50,6 +50,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         [XmlIgnore]
         public BackgroundLogcat LogcatOutput { get; set; }
 
+        public override bool HideMeasurement { get { return Action != ActionEnum.Measure; } }
+
         public AdbResourceAgentStep() { }
 
         public override void Run()
@@ -75,7 +77,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // Measure
             if (Action == ActionEnum.Measure)
             {
-                TestPlan.Sleep(10000);
+                MeasurementWait();
             }
 
             // Retrieve results
