@@ -18,6 +18,7 @@ using Tap.Plugins.UMA.AdbAgents.Results;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
+    [AllowAnyChild]
     public abstract class AdbAgentBaseStep : MeasurementStepBase
     {
         public enum ActionEnum { Start, Measure, Stop };
@@ -30,10 +31,18 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 Order: 1.1)]
         public string DeviceId { get; set; }
 
-        [Display("Action")]
+        [Display("Action", Order: 2.0)]
         public ActionEnum Action { get; set; }
 
-        [Display("Background Logcat")]
+        [Display("Logcat Threshold", Order: 2.1,
+            Description: "Extra seconds of logcat output to include as valid results for this execution.\n" +
+                         "Do not set this to a value larger enought that it might include messages generated\n" +
+                         "in a previous execution of this step. [Default 15s, usually requires a minimum of 10s]")]
+        [Unit("s")]
+        [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
+        public int LogcatThreshold { get; set; }
+
+        [Display("Background Logcat", Order: 2.1)]
         [EnabledIf("Action", ActionEnum.Stop, HideIfDisabled = true)]
         public Input<BackgroundLogcat> LogcatInput { get; set; }
 
@@ -48,6 +57,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             Action = ActionEnum.Measure;
             MeasurementMode = WaitMode.Time;
             MeasurementTime = 10;
+            LogcatThreshold = 15;
         }
 
         protected abstract void StartAgent();
@@ -62,6 +72,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             {
                 logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
                     filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
+
+                logcat.StartTime = logcat.StartTime.AddSeconds(-LogcatThreshold);
 
                 // Set the created logcat as output
                 if (Action == ActionEnum.Start)
@@ -99,8 +111,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected void parseResults<T>(string tableName, string[] logcat, DateTime startTime) where T : ResultBase, new()
         {
-            T resultInstance = new T();
-            string[] columnNames = resultInstance.GetColumns();
+            string[] columnNames = new T().GetColumns();
 
             Dictionary<string, List<IConvertible>> resultLists = new Dictionary<string, List<IConvertible>>();
             foreach (string column in columnNames)
@@ -108,21 +119,22 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 resultLists[column] = new List<IConvertible>();
             }
 
-            Log.Info($"Parsing {tableName} results from logcat (starting at {startTime.ToShortTimeString()})");
+            Log.Info($"Parsing {tableName} results from logcat (starting at {startTime.ToLongTimeString()})");
             int found = 0, ignored = 0;
 
             foreach (string line in logcat)
             {
-                System.Diagnostics.Debug.WriteLine(line);
-                ResourcesResult resources = new ResourcesResult(line);
+                Log.Debug(line);
+                T result = new T();
+                result.Parse(line);
 
-                if (resources.Valid)
+                if (result.Valid)
                 {
-                    if (resources.LogTime > startTime)
+                    if (result.LogTime > startTime)
                     {
                         foreach (string column in columnNames)
                         {
-                            resultLists[column].Add(resources.GetValue(column));
+                            resultLists[column].Add(result.GetValue(column));
                         }
                         found++;
                     }
@@ -147,11 +159,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
                 ResultTable table = new ResultTable(tableName, resultColumns.ToArray());
                 table.PublishToSource(Results);
-                Log.Debug($"Published {found} results, {ignored} logcat lines ignored (previous to {startTime.ToShortTimeString()})");
+                Log.Debug($"Published {found} results, {ignored} logcat lines ignored (previous to {startTime.ToLongTimeString()})");
             }
             else
             {
-                Log.Warning($"No results retrieved, ignored {ignored} results (previous to {startTime.ToShortTimeString()}).");
+                Log.Warning($"No results retrieved, ignored {ignored} results (previous to {startTime.ToLongTimeString()}).");
             }
         }
     }

@@ -15,10 +15,6 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 {
     public class ResourcesResult : ResultBase
     {
-        private static readonly string DATETIME = @"(\d+-\d+ \d+:\d+:\d+.\d+)";
-        private static readonly string FLOAT = @"((\d+)([.,]\d+)*)";
-        private static readonly string INT = @"(\d+)";
-
         private static readonly string CPU_RAM = $"CPU usage {FLOAT}% ; Ram used {INT}MBs ; Available Ram {INT}MBs";
         private static readonly string TX_RX = $"Packets Received {INT} ; Packets Transmitted {INT} ; Bytes Received {INT} ; Bytes Transmitted {INT}";
         private static readonly string NETWORK = @"Operator (.+) ; Network (.+) ; Cell ID (.+) ; LAC (.+) ; RSSI (.+) ; PSC (.+) ; RSRP (.+) ; SNR (.+) ; CQI (.+) ; RSRQ (.+)";
@@ -59,9 +55,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public int? Cqi;
         public int? Rsrq;
 
-        public ResourcesResult() : this(string.Empty) { }
-
-        public ResourcesResult(string line)
+        public ResourcesResult()
         {
             LogTime = DateTime.MinValue;
             Timestamp = 0;
@@ -70,12 +64,15 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             Operator = Network = CellId = Lac = Psc = "Unavailable";
             Rssi = Rsrp = Snr = Cqi = Rsrq = -1;
             Valid = false;
+        }
 
+        public override void Parse(string line)
+        {
             Match match = regex.Match(line);
 
             if (match.Success)
             {
-                LogTime = DateTime.ParseExact(match.Groups[1].Value, "MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture);
+                LogTime = logcatDate(match.Groups[1].Value);
                 Timestamp = ulong.Parse(match.Groups[2].Value);
                 UsedCpuPerCent = double.Parse(match.Groups[3].Value);
                 UsedRam = int.Parse(match.Groups[6].Value);
