@@ -68,6 +68,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 {
                     LogcatOutput = logcat;
                 }
+
+                Instrument.Start(DeviceId);
             }
             else
             {
@@ -83,6 +85,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // Retrieve results
             if (Action == ActionEnum.Measure || Action == ActionEnum.Stop)
             {
+                Instrument.Stop(DeviceId);
+
                 logcat.Terminate();
 
                 string[] res = Instrument.Adb.RetrieveLogcat(logcat, localFilename: null);
@@ -91,7 +95,6 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
                 Instrument.Adb.DeleteExistingDeviceLogcatFiles(DEVICE_FILE, DeviceId);
             }
-
         }
 
         private string buildArguments()

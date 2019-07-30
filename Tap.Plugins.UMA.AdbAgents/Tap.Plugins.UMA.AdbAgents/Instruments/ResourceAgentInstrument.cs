@@ -19,7 +19,27 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
     [ShortName("ADB_Res")]
     public class ResourceAgentInstrument: Instrument
     {
+        private const string PACKAGE = "com.uma.resourceAgent";
+        private const string SERVICE = PACKAGE + "/.ResourceAgentService";
+        private const string START = PACKAGE + ".START";
+        private const string STOP = PACKAGE + ".STOP";
+
         [Display("Adb Instrument")]
         public AdbInstrument Adb { get; set; }
+
+        public void Start(string DeviceId = null)
+        {
+            Adb.ExecuteAdbCommand(parameters(START), DeviceId);
+        }
+
+        public void Stop(string DeviceId = null)
+        {
+            Adb.ExecuteAdbCommand(parameters(STOP), DeviceId);
+        }
+
+        private string parameters(string intent)
+        {
+            return $"shell am startservice -n {SERVICE} -a {intent} --user 0";
+        }
     }
 }
