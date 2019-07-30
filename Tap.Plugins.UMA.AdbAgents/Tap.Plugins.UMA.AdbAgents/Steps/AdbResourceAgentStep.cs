@@ -52,7 +52,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         public override bool HideMeasurement { get { return Action != ActionEnum.Measure; } }
 
-        public AdbResourceAgentStep() { }
+        public AdbResourceAgentStep()
+        {
+            Action = ActionEnum.Measure;
+            MeasurementMode = WaitMode.Time;
+            MeasurementTime = 10;
+        }
 
         public override void Run()
         {
@@ -128,7 +133,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 resultLists[column] = new List<IConvertible>();
             }
 
-            Log.Info($"Parsing adb Resource Agent results from logcat (from {startTime.ToShortTimeString()})");
+            Log.Info($"Parsing adb Resource Agent results from logcat (starting at {startTime.ToShortTimeString()})");
             int found = 0, ignored = 0;
 
             foreach (string line in logcat)
@@ -150,7 +155,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 }
                 else
                 {
-                    Log.Warning($"Could not parse logcat line '{line}'");
+                    string message = $"Could not parse logcat line '{line}'";
+                    if (line.EndsWith(">>>")) { Log.Warning(message); }
+                    else { Log.Debug(message); }
                 }
             }
 
@@ -165,11 +172,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
                 ResultTable table = new ResultTable("ADB Resource Agent", resultColumns.ToArray());
                 table.PublishToSource(Results);
-                Log.Debug($"Published {found} results ({ignored} logcat lines ignored)");
+                Log.Debug($"Published {found} results, {ignored} logcat lines ignored (previous to {startTime.ToShortTimeString()})");
             }
             else
             {
-                Log.Warning($"No results retrieved, ignored {ignored} results.");
+                Log.Warning($"No results retrieved, ignored {ignored} results (previous to {startTime.ToShortTimeString()}).");
             }
         }
     }

@@ -52,7 +52,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 UsedRam = int.Parse(match.Groups[6].Value);
                 AvailableRam = int.Parse(match.Groups[7].Value);
                 TotalRam = UsedRam + AvailableRam;
-                UsedRamPerCent = (TotalRam / 100.0) * UsedRam;
+                UsedRamPerCent = ((double)UsedRam / TotalRam) * 100.0;
                 PacketsReceived = int.Parse(match.Groups[8].Value);
                 PacketsSent = int.Parse(match.Groups[9].Value);
                 BytesReceived = int.Parse(match.Groups[10].Value);
