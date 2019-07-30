@@ -77,7 +77,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // Measure
             if (Action == ActionEnum.Measure)
             {
-                MeasurementWait();
+                TestPlan.Sleep(10000);
             }
 
             // Retrieve results
@@ -87,7 +87,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
                 string[] res = Instrument.Adb.RetrieveLogcat(logcat, localFilename: null);
 
-                parseResults(res);
+                parseResults(res, logcat.StartTime);
 
                 Instrument.Adb.DeleteExistingDeviceLogcatFiles(DEVICE_FILE, DeviceId);
             }
@@ -117,78 +117,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             Log.Debug("------- End of adb output -------");
         }
 
-        public struct ResourcesResult
-        {
-            private static readonly string FLOAT = @"((\d+)([.,]\d+)?)";
-            private static readonly string INT = @"(\d+)";
-
-            private static Regex regex = new Regex(
-                $".*<<< Elapsed time .* sec ; Timestamp {INT} ; CPU usage {FLOAT}% ; Ram used {INT}MBs ; Available Ram {INT}MBs ; Packets Received {INT} ; Packets Transmitted {INT} ; Bytes Received {INT} ; Bytes Transmitted {INT} >>>.*", 
-                RegexOptions.Compiled);
-
-            public static string[] COLUMNS = new string[] {
-                "Timestamp", "Used CPU Per Cent", "Used RAM", "Available RAM", "Total RAM",
-                "Used RAM Per Cent", "Packets Sent", "PacketsReceived", "Bytes Sent", "Bytes Received" };
-
-            public bool Valid;
-            public ulong Timestamp;
-            public double UsedCpuPerCent;
-            public int UsedRam;
-            public int AvailableRam;
-            public int TotalRam;
-            public double UsedRamPerCent;
-            public int PacketsSent;
-            public int PacketsReceived;
-            public int BytesSent;
-            public int BytesReceived;
-
-            public ResourcesResult(string line)
-            {
-                Match match = regex.Match(line);
-
-                if (match.Success)
-                {
-                    Timestamp = ulong.Parse(match.Groups[1].Value);
-                    UsedCpuPerCent = double.Parse(match.Groups[2].Value);
-                    UsedRam = int.Parse(match.Groups[5].Value);
-                    AvailableRam = int.Parse(match.Groups[6].Value);
-                    TotalRam = UsedRam + AvailableRam;
-                    UsedRamPerCent = (TotalRam / 100.0) * UsedRam;
-                    PacketsReceived = int.Parse(match.Groups[7].Value);
-                    PacketsSent = int.Parse(match.Groups[8].Value);
-                    BytesReceived = int.Parse(match.Groups[9].Value); 
-                    BytesSent = int.Parse(match.Groups[10].Value);
-                    Valid = true;
-                }
-                else
-                {
-                    Timestamp = 0;
-                    UsedCpuPerCent = UsedRamPerCent = 0.0;
-                    UsedRam = AvailableRam = TotalRam = PacketsSent = PacketsReceived = BytesSent = BytesReceived = 0;
-                    Valid = false;
-                }
-            }
-
-            public IConvertible GetValue(string column)
-            {
-                switch (column)
-                {
-                    case "Timestamp": return Timestamp;
-                    case "Used CPU Per Cent": return UsedCpuPerCent;
-                    case "Used RAM": return UsedRam;
-                    case "Available RAM": return AvailableRam;
-                    case "Total RAM": return TotalRam;
-                    case "Used RAM Per Cent": return UsedRamPerCent;
-                    case "Packets Sent": return PacketsSent;
-                    case "PacketsReceived": return PacketsReceived;
-                    case "Bytes Sent": return BytesSent;
-                    case "Bytes Received": return BytesReceived;
-                    default: throw new Exception($"Unrecognized column '{column}'");
-                }
-            }
-        }
-
-        private void parseResults(string[] logcat)
+        private void parseResults(string[] logcat, DateTime startTime)
         {
             Dictionary<string, List<IConvertible>> resultLists = new Dictionary<string, List<IConvertible>>();
             foreach (string column in ResourcesResult.COLUMNS)
@@ -196,16 +125,25 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 resultLists[column] = new List<IConvertible>();
             }
 
+            Log.Info($"Parsing adb Resource Agent results from logcat (from {startTime.ToShortTimeString()})");
+            int found = 0, ignored = 0;
+
             foreach (string line in logcat)
             {
+                System.Diagnostics.Debug.WriteLine(line);
                 ResourcesResult resources = new ResourcesResult(line);
 
                 if (resources.Valid)
                 {
-                    foreach (string column in ResourcesResult.COLUMNS)
+                    if (resources.LogTime > startTime)
                     {
-                        resultLists[column].Add(resources.GetValue(column));
+                        foreach (string column in ResourcesResult.COLUMNS)
+                        {
+                            resultLists[column].Add(resources.GetValue(column));
+                        }
+                        found++;
                     }
+                    else { ignored++; }
                 }
                 else
                 {
@@ -213,15 +151,23 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 }
             }
 
-            List<ResultColumn> resultColumns = new List<ResultColumn>();
-
-            foreach (string column in ResourcesResult.COLUMNS)
+            if (found > 0)
             {
-                resultColumns.Add(new ResultColumn(column, resultLists[column].ToArray()));
-            }
+                List<ResultColumn> resultColumns = new List<ResultColumn>();
 
-            ResultTable table = new ResultTable("ADB Resource Agent", resultColumns.ToArray());
-            table.PublishToSource(Results);
+                foreach (string column in ResourcesResult.COLUMNS)
+                {
+                    resultColumns.Add(new ResultColumn(column, resultLists[column].ToArray()));
+                }
+
+                ResultTable table = new ResultTable("ADB Resource Agent", resultColumns.ToArray());
+                table.PublishToSource(Results);
+                Log.Debug($"Published {found} results ({ignored} logcat lines ignored)");
+            }
+            else
+            {
+                Log.Warning($"No results retrieved, ignored {ignored} results.");
+            }
         }
     }
 }
