@@ -54,12 +54,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         public string Network;
         public string CellId;
         public string Lac;
-        public int Rssi;
-        public int Psc;
-        public int Rsrp;
-        public int Snr;
-        public int Cqi;
-        public int Rsrq;
+        public string Psc;
+        public int? Rssi;
+        public int? Rsrp;
+        public int? Snr;
+        public int? Cqi;
+        public int? Rsrq;
 
         public ResourcesResult(string line)
         {
@@ -67,8 +67,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             Timestamp = 0;
             UsedCpuPerCent = UsedRamPerCent = 0.0;
             UsedRam = AvailableRam = TotalRam = PacketsSent = PacketsReceived = BytesSent = BytesReceived = 0;
-            Operator = Network = CellId = Lac = "Unavailable";
-            Rssi = Psc = Rsrp = Snr = Cqi = Rsrq = -1;
+            Operator = Network = CellId = Lac = Psc = "Unavailable";
+            Rssi = Rsrp = Snr = Cqi = Rsrq = -1;
             Valid = false;
 
             Match match = regex.Match(line);
@@ -101,24 +101,24 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 Network = match.Groups[2].Value;
                 CellId = match.Groups[3].Value;
                 Lac = match.Groups[4].Value;
-                Rssi = maybeInt(match.Groups[5].Value, int.MinValue);
-                Psc = maybeInt(match.Groups[6].Value, int.MinValue);
-                Rsrp = maybeInt(match.Groups[7].Value, int.MinValue);
-                Snr = maybeInt(match.Groups[8].Value, int.MinValue);
-                Cqi = maybeInt(match.Groups[9].Value, int.MinValue);
-                Rsrq = maybeInt(match.Groups[10].Value, int.MinValue);
+                Rssi = maybeInt(match.Groups[5].Value);
+                Psc = match.Groups[6].Value;
+                Rsrp = maybeInt(match.Groups[7].Value);
+                Snr = maybeInt(match.Groups[8].Value);
+                Cqi = maybeInt(match.Groups[9].Value);
+                Rsrq = maybeInt(match.Groups[10].Value);
                 return true;
             }
             return false;
         }
 
-        private int maybeInt(string value, int n_a)
+        private int? maybeInt(string value)
         {
             if (int.TryParse(value, out int result))
             {
                 return result;
             }
-            return n_a;
+            return null;
         }
 
         public IConvertible GetValue(string column)
