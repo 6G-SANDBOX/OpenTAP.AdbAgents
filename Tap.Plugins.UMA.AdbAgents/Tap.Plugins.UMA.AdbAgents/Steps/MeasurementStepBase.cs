@@ -3,7 +3,7 @@
 //
 // This file cannot be modified or redistributed. This header cannot be removed.
 
-using Keysight.Tap;
+using OpenTap;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
@@ -28,7 +28,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             switch (MeasurementMode)
             {
                 case WaitMode.Time:
-                    TestPlan.Sleep((int)(MeasurementTime * 1000));
+                    TapThread.Sleep((int)(MeasurementTime * 1000));
                     break;
                 default:
                     RunChildSteps();

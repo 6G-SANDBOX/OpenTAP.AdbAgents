@@ -9,14 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Keysight.Tap;
+using OpenTap;
 using Tap.Plugins.UMA.Android.Instruments;
 
 namespace Tap.Plugins.UMA.AdbAgents.Instruments
 {
     [Display("Ping Agent", Groups: new string[] { "UMA", "Adb Agents" },
         Description: "Instrument for controlling the Adb Ping Agent")]
-    [ShortName("ADB_Ping")]
     public class PingAgentInstrument : Instrument
     {
         private const string PACKAGE = "com.uma.ping";
@@ -27,6 +26,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         [Display("Adb Instrument")]
         public AdbInstrument Adb { get; set; }
+
+        public PingAgentInstrument() : base()
+        {
+            Name = "ADB_Ping";
+        }
 
         public void Start(string target, int ttl, string DeviceId = null)
         {

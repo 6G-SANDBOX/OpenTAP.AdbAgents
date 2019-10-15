@@ -9,14 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Keysight.Tap;
+using OpenTap;
 using Tap.Plugins.UMA.Android.Instruments;
 
 namespace Tap.Plugins.UMA.AdbAgents.Instruments
 {
     [Display("Resource Agent", Groups: new string[] { "UMA", "Adb Agents" },
         Description: "Instrument for controlling the Adb Resource Agent")]
-    [ShortName("ADB_Res")]
     public class ResourceAgentInstrument: Instrument
     {
         private const string PACKAGE = "com.uma.resourceAgent";
@@ -26,6 +25,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         [Display("Adb Instrument")]
         public AdbInstrument Adb { get; set; }
+
+        public ResourceAgentInstrument() : base()
+        {
+            Name = "ADB_Res";
+        }
 
         public void Start(string DeviceId = null)
         {
