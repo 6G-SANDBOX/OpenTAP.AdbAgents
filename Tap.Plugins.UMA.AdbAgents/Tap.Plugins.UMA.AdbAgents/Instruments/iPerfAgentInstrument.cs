@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Keysight.Tap;
+using OpenTap;
 using Tap.Plugins.UMA.Android.Instruments;
 
 namespace Tap.Plugins.UMA.AdbAgents.Instruments
 {
     [Display("iPerf Agent", Groups: new string[] { "UMA", "Adb Agents" },
              Description: "Instrument for controlling the Adb Ping Agent")]
-    [ShortName("ADB_iPerf")]
     public class iPerfAgentInstrument : Instrument
     {
         public enum RoleEnum { Client, Server }
@@ -27,6 +26,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         [Display("Adb Instrument")]
         public AdbInstrument Adb { get; set; }
+
+        public iPerfAgentInstrument() : base()
+        {
+            Name = "ADB_iPerf";
+        }
 
         public void Start(RoleEnum role, string host, int port, int parallel, string extra, string DeviceId = null)
         {
