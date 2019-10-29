@@ -55,12 +55,15 @@
     <Compile Include="Extensions\ResultTableExtensions.cs" />
     <Compile Include="Extensions\SecureStringExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Instruments\iPerfAgentInstrument.cs" />
     <Compile Include="Instruments\PingAgentInstrument.cs" />
     <Compile Include="Instruments\ResourceAgentInstrument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Results\iPerfResult.cs" />
     <Compile Include="Results\PingResult.cs" />
     <Compile Include="Results\ResultBase.cs" />
     <Compile Include="Steps\AdbAgentBaseStep.cs" />
+    <Compile Include="Steps\AdbiPerfAgentStep.cs" />
     <Compile Include="Steps\AdbPingAgentStep.cs" />
     <Compile Include="Steps\AdbResourceAgentStep.cs" />
     <Compile Include="Steps\MeasurementStepBase.cs" />

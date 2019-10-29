@@ -20,9 +20,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
     {
         private const string PACKAGE = "com.uma.ping";
         private const string SERVICE = PACKAGE + "/.PingService";
+        private const string ACTIVITY = PACKAGE + "/" + PACKAGE + ".PingActivity";
         private const string START = PACKAGE + ".START";
         private const string STOP = PACKAGE + ".STOP";
         private const string EXTRA = PACKAGE + ".PARAMETERS";
+        private const string ACTIVITY_SINGLE_TOP = "0x20000000";
 
         [Display("Adb Instrument")]
         public AdbInstrument Adb { get; set; }
@@ -34,6 +36,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         public void Start(string target, int ttl, string DeviceId = null)
         {
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            TapThread.Sleep(500);
             Adb.ExecuteAdbCommand(parameters(START, extras(target, ttl)), DeviceId);
         }
 
