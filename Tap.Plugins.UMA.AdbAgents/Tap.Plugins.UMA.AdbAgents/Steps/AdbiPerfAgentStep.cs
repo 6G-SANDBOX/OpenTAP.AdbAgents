@@ -20,7 +20,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
     [Display("Adb iPerf Agent", Groups: new string[] { "UMA", "Agents" })]
     public class AdbiPerfAgentStep : AdbAgentBaseStep
     {
-        private static readonly string DEVICE_FILE = "sdcard/adb_iperf_agent.log";
+        private static readonly string DEVICE_FILE_CLIENT = "sdcard/adb_iperf_agent_client.log";
+        private static readonly string DEVICE_FILE_SERVER = "sdcard/adb_iperf_agent_server.log";
         private static readonly string AGENT_TAG_CLIENT = "iperf.Client";
         private static readonly string AGENT_TAG_SERVER = "iperf.Server";
 
@@ -80,7 +81,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         public override void Run()
         {
-            DoRun(Instrument.Adb, DEVICE_FILE, (Role == RoleEnum.Client) ? AGENT_TAG_CLIENT : AGENT_TAG_SERVER);
+            DoRun(Instrument.Adb,
+                (Role == RoleEnum.Client) ? DEVICE_FILE_CLIENT : DEVICE_FILE_SERVER, 
+                (Role == RoleEnum.Client) ? AGENT_TAG_CLIENT : AGENT_TAG_SERVER);
         }
 
         protected override void StartAgent()
@@ -95,7 +98,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void ParseResults(string[] logcatOutput, DateTime startTime)
         {
-            parseResults<iPerfResult>("ADB iPerf Agent", filterLogcat(logcatOutput), startTime);
+            parseResults<iPerfResult>(
+                $"ADB iPerf Agent {(Role == RoleEnum.Client ? "Client" : "Server")}",
+                filterLogcat(logcatOutput), startTime);
         }
 
         private string[] filterLogcat(string[] logcatOutput)

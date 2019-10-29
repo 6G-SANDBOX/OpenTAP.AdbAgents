@@ -70,6 +70,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // Prepare logcat
             if (Action == ActionEnum.Start || Action == ActionEnum.Measure)
             {
+                adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
+
                 logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
                     filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
 
@@ -104,8 +106,6 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
 
                 ParseResults(res, logcat.StartTime);
-
-                adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
             }
         }
 

@@ -28,15 +28,21 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             RegexOptions.Compiled);
 
         public static string[] COLUMNS = new string[] {
-            "Timestamp", "ICMP_Seq", "Success", "Delay"
+            "Timestamp", "Throughput (Mbps)", "Jitter (ms)", "Packet Loss (%)"
         };
 
         public override string[] GetColumns() { return COLUMNS; }
+
+        public double Throughput;
+        public double Jitter;
+        public double PacketLoss;
 
         public iPerfResult()
         {
             LogTime = DateTime.MinValue;
             Timestamp = 0;
+            Throughput = Jitter = PacketLoss = 0;
+
             Valid = false;
         }
 
@@ -69,8 +75,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 
             if (match.Success)
             {
+                Throughput = double.Parse(match.Groups[11].Value);
 
-                return parseUdp("");
+                return parseUdp(match.Groups[14].Value);
             }
             else { return false; }
         }
@@ -81,10 +88,10 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 
             if (match.Success)
             {
-
-                return true;
+                Jitter = double.Parse(match.Groups[1].Value);
+                PacketLoss = double.Parse(match.Groups[6].Value);
             }
-            else { return false; }
+            return true;
         }
 
         public override IConvertible GetValue(string column)
@@ -92,6 +99,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             switch (column)
             {
                 case "Timestamp": return Timestamp;
+                case "Throughput (Mbps)": return Throughput;
+                case "Jitter (ms)": return Jitter;
+                case "Packet Loss (%)": return PacketLoss;
                 default: throw new Exception($"Unrecognized column '{column}'");
             }
         }
