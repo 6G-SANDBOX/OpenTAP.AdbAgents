@@ -26,7 +26,6 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         private static Regex udpRegex = new Regex(
             $@" *{FLOAT} *ms *{INT} */ *{INT} \({FLOAT}%\)",
             RegexOptions.Compiled);
-             
 
         public static string[] COLUMNS = new string[] {
             "Timestamp", "ICMP_Seq", "Success", "Delay"

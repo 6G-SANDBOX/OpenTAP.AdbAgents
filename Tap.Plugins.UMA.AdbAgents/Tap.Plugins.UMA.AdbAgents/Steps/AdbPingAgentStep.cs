@@ -54,7 +54,24 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void ParseResults(string[] logcatOutput, DateTime startTime)
         {
-            parseResults<PingResult>("ADB Ping Agent", logcatOutput, startTime);
+            List<PingResult> results = parseResults<PingResult>("ADB Ping Agent", logcatOutput, startTime);
+
+            // Additional processing for aggregated measurements
+            List<string> columns = new List<string>() { "Timestamp", "Total", "Success", "Failed", "Success Ratio", "Failed Ratio" };
+            int success = 0;
+            ulong timestamp = 0;
+            int total = results.Count;
+            
+            foreach (PingResult result in results)
+            {
+                if (result.Success) { success++; }
+                timestamp += result.Timestamp;
+            }
+
+            double successRatio = (double)success / (double)total;
+
+            Results.Publish("ADB Ping Agent Aggregated",  columns, 
+                (ulong)(timestamp/(ulong)total), total, success, total - success, successRatio, 1.0-successRatio);
         }
     }
 }

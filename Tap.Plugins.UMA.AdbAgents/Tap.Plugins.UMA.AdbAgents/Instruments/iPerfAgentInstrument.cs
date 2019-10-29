@@ -17,11 +17,13 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         private const string PACKAGE = "com.uma.iperf";
         private const string SERVICE = PACKAGE + "/.iPerfService";
+        private const string ACTIVITY = PACKAGE + "/" + PACKAGE + ".iPerfActivity";
         private const string CLIENT_START = PACKAGE + ".CLIENTSTART";
         private const string CLIENT_STOP = PACKAGE + ".CLIENTSTOP";
         private const string SERVER_START = PACKAGE + ".SERVERSTART";
         private const string SERVER_STOP = PACKAGE + ".SERVERSTOP";
         private const string EXTRA = PACKAGE + ".PARAMETERS";
+        private const string ACTIVITY_SINGLE_TOP = "0x20000000";
         private static readonly List<string> ignoredKeys = new List<string> { "-c", "-s", "-p", "-t", "-i", "-f" };
 
         [Display("Adb Instrument")]
@@ -36,6 +38,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
         {
             string start = (role == RoleEnum.Client) ? CLIENT_START : SERVER_START;
             string cmd = iPerfParameters(role, host, port, parallel, extra);
+
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            TapThread.Sleep(500);
             Adb.ExecuteAdbCommand(parameters(start, extras: cmd), DeviceId);
         }
 
