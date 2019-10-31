@@ -50,9 +50,13 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         public int Parallel { get; set; }
 
         [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Extra Parameters", Group: "Parameters", Order: 2.4,
+        [Display("UDP", Group: "Parameters", Order: 2.4)]
+        public bool Udp { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Extra Parameters", Group: "Parameters", Order: 2.5,
             Description: "Extra parameters to pass to iPerf. Separate parameters with ';', separate keys/values with space\n" +
-                         "Example: '-P 4; -u; -B 192.168.2.1'")]
+                         "Example: '-P 4; -B 192.168.2.1'")]
         public string ExtraParameters { get; set; }
 
         #region Measurement
@@ -70,6 +74,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             MeasurementMode = WaitMode.Time;
             MeasurementTime = 4.0;
             Parallel = 1;
+            Udp = false;
 
             Role = RoleEnum.Client;
             Host = "127.0.0.1";
@@ -88,7 +93,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void StartAgent()
         {
-            Instrument.Start(Role, Host, Port, Parallel, ExtraParameters);
+            Instrument.Start(Role, Host, Port, Parallel, Udp, ExtraParameters);
         }
 
         protected override void StopAgent()
@@ -108,11 +113,52 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             List<string> res = new List<string>();
             bool isParallel = (Parallel > 1);
 
-            foreach (string line in logcatOutput)
+            // In this case we must aggregate the jitter and packet loss of each instance
+            if (Udp && isParallel && Role == RoleEnum.Server) 
             {
-                if (isParallel == iPerfResult.IsSumResult(line))
+                int count = 0, lost = 0, sent = 0;
+                double jitter = 0.0;
+
+                foreach (string line in logcatOutput)
                 {
-                    res.Add(line);
+                    if (!iPerfResult.IsiPerfResult(line))
+                    {
+                        continue;
+                    }
+                    else if (iPerfResult.IsSumResult(line)) // Generate the SUM line with UDP data
+                    {
+                        jitter = jitter / (double)count;
+                        double packetLoss = (double)lost / (double)sent;
+                        string udpSumLine = line.Replace(">>>", $" {jitter} ms {lost}/{sent} ({packetLoss}%) >>>");
+                        System.Diagnostics.Debug.WriteLine(udpSumLine);
+                        res.Add(udpSumLine);
+
+                        count = lost = sent = 0;
+                        jitter = 0.0;
+                    }
+                    else // Aggregate the UDP Data from the instance
+                    {
+                        iPerfResult result = new iPerfResult();
+                        result.Parse(line);
+                        lost += (int)result.GetValue("Lost");
+                        sent += (int)result.GetValue("Sent");
+                        jitter += (double)result.GetValue("Jitter (ms)");
+                        count++;
+                    }
+                }
+            }
+            else // Using SUM or the single instance line is enough
+            {
+                foreach (string line in logcatOutput)
+                {
+                    if (!iPerfResult.IsiPerfResult(line))
+                    {
+                        continue;
+                    }
+                    else if (isParallel == iPerfResult.IsSumResult(line))
+                    {
+                        res.Add(line);
+                    }
                 }
             }
 

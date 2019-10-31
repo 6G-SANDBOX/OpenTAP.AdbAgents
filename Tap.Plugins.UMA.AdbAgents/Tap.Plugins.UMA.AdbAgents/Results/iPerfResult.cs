@@ -37,11 +37,17 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public double Jitter;
         public double PacketLoss;
 
+        // Unpublished data
+        public int Sequence;
+        public int Lost;
+        public int Sent;
+
         public iPerfResult()
         {
             LogTime = DateTime.MinValue;
             Timestamp = 0;
             Throughput = Jitter = PacketLoss = 0;
+            Sequence = Lost = Sent = 0;
 
             Valid = false;
         }
@@ -76,6 +82,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             if (match.Success)
             {
                 Throughput = double.Parse(match.Groups[11].Value);
+                Sequence = int.Parse(match.Groups[3].Value);
 
                 return parseUdp(match.Groups[14].Value);
             }
@@ -90,6 +97,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             {
                 Jitter = double.Parse(match.Groups[1].Value);
                 PacketLoss = double.Parse(match.Groups[6].Value);
+
+                Lost = int.Parse(match.Groups[4].Value);
+                Sent = int.Parse(match.Groups[5].Value);
             }
             return true;
         }
@@ -102,6 +112,10 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 case "Throughput (Mbps)": return Throughput;
                 case "Jitter (ms)": return Jitter;
                 case "Packet Loss (%)": return PacketLoss;
+                // Unpublished data
+                case "Sequence": return Sequence;
+                case "Sent": return Sent;
+                case "Lost": return Lost;
                 default: throw new Exception($"Unrecognized column '{column}'");
             }
         }
