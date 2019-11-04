@@ -20,7 +20,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             RegexOptions.Compiled);
 
         public static string[] COLUMNS = new string[] {
-            "Timestamp", "ICMP_Seq", "Success", "Delay"
+            "Timestamp", "ICMP Seq", "Success", "Delay (ms)"
         };
 
         public override string[] GetColumns() { return COLUMNS; }
@@ -63,9 +63,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             switch (column)
             {
                 case "Timestamp": return Timestamp;
-                case "ICMP_Seq": return IcmpSeq;
+                case "ICMP Seq": return IcmpSeq;
                 case "Success": return Success;
-                case "Delay": return Delay;
+                case "Delay (ms)": return Delay;
                 default: throw new Exception($"Unrecognized column '{column}'");
             }
         }
