@@ -26,8 +26,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         private static Regex networkRegex = new Regex(NETWORK, RegexOptions.Compiled);
 
         public static string[] COLUMNS = new string[] {
-            "Timestamp", "Used CPU Per Cent", "Used RAM", "Available RAM", "Total RAM",
-            "Used RAM Per Cent", "Packets Sent", "PacketsReceived", "Bytes Sent", "Bytes Received",
+            "Timestamp", "Used CPU (%)", "Used RAM (MB)", "Available RAM (MB)", "Total RAM (MB)",
+            "Used RAM (%)", "Packets Sent", "Packets Received", "Bytes Sent", "Bytes Received",
             "Operator", "Network", "Cell ID", "LAC", "RSSI", "PSC", "SNR", "RSRP", "RSRQ", "CQI"
         };
 
@@ -114,13 +114,13 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             switch (column)
             {
                 case "Timestamp": return Timestamp;
-                case "Used CPU Per Cent": return UsedCpuPerCent;
-                case "Used RAM": return UsedRam;
-                case "Available RAM": return AvailableRam;
-                case "Total RAM": return TotalRam;
-                case "Used RAM Per Cent": return UsedRamPerCent;
+                case "Used CPU (%)": return UsedCpuPerCent;
+                case "Used RAM (MB)": return UsedRam;
+                case "Available RAM (MB)": return AvailableRam;
+                case "Total RAM (MB)": return TotalRam;
+                case "Used RAM (%)": return UsedRamPerCent;
                 case "Packets Sent": return PacketsSent;
-                case "PacketsReceived": return PacketsReceived;
+                case "Packets Received": return PacketsReceived;
                 case "Bytes Sent": return BytesSent;
                 case "Bytes Received": return BytesReceived;
                 case "Operator": return Operator;
