@@ -47,6 +47,10 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
         public void Stop(RoleEnum role, string DeviceId = null)
         {
             string stop = (role == RoleEnum.Client) ? CLIENT_STOP : SERVER_STOP;
+            // Bring to top
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            TapThread.Sleep(500);
+            // Send stop intent
             Adb.ExecuteAdbCommand(parameters(stop, extras: null), DeviceId);
         }
 

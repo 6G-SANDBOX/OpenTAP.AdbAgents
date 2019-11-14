@@ -100,12 +100,14 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             if (Action == ActionEnum.Measure || Action == ActionEnum.Stop)
             {
                 StopAgent();
-
+                TapThread.Sleep(500);
                 logcat.Terminate();
-
+                TapThread.Sleep(500);
                 string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
 
                 ParseResults(res, logcat.StartTime);
+
+                TapThread.Sleep(1000);
             }
         }
 

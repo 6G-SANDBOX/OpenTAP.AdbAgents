@@ -42,6 +42,10 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
         public void Stop(string DeviceId = null)
         {
+            // Bring to top
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            TapThread.Sleep(500);
+            // Send stop intent
             Adb.ExecuteAdbCommand(parameters(STOP), DeviceId);
         }
 

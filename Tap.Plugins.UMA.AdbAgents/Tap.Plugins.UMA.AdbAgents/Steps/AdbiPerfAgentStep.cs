@@ -130,7 +130,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                         jitter = jitter / (double)count;
                         double packetLoss = (double)lost / (double)sent;
                         string udpSumLine = line.Replace(">>>", $" {jitter} ms {lost}/{sent} ({packetLoss}%) >>>");
-                        System.Diagnostics.Debug.WriteLine(udpSumLine);
+                        
                         res.Add(udpSumLine);
 
                         count = lost = sent = 0;
