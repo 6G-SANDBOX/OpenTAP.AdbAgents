@@ -54,9 +54,15 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             Name = "Exoplayer";
         }
 
-        public void Start(string DeviceId = null, string exolist = AXINOM, List<KeyEvent> keys = null)
+        public void Start(string DeviceId = null, string exolist = null, List<KeyEvent> keys = null)
         {
-            Adb.ExecuteAdbCommand($"shell am start -n {PACKAGE}/.{ACTIVITY} -d {exolist}", DeviceId);
+            string command = $"shell am start -n {PACKAGE}/.{ACTIVITY}";
+            if (!string.IsNullOrWhiteSpace(exolist))
+            {
+                command += $" -d {exolist}";
+            }
+
+            Adb.ExecuteAdbCommand(command, DeviceId);
             TapThread.Sleep(3000);
             if (keys != null) { PressKeys(keys); }
         }
@@ -73,16 +79,19 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             {
                 for (int i = 1; i <= key.Repeat; i++)
                 {
-                    if (key.Action == KeyEvent.ActionEnum.KeyPress)
+                    switch (key.Action)
                     {
-                        Log.Debug($"Pressing key {key.Code} (repeat {i}) '{key.Comment}'");
-                        Adb.ExecuteAdbCommand($"shell input keyevent {key.Code}");
-                        TapThread.Sleep(500);
-                    }
-                    else
-                    {
-                        Log.Debug($"Waiting {key.Code}ms (repeat {i}) '{key.Comment}'");
-                        TapThread.Sleep(key.Code);
+                        case KeyEvent.ActionEnum.KeyPress:
+                            Log.Debug($"Pressing key {key.Code} (repeat {i}) '{key.Comment}'");
+                            Adb.ExecuteAdbCommand($"shell input keyevent {key.Code}");
+                            TapThread.Sleep(500);
+                            break;
+                        case KeyEvent.ActionEnum.Wait:
+                            Log.Debug($"Waiting {key.Code}ms (repeat {i}) '{key.Comment}'");
+                            TapThread.Sleep(key.Code);
+                            break;
+                        default:
+                            throw new ArgumentException($"Unrecognized KeyEvent.ActionEnum: {key.Action}");
                     }
                 }
             }

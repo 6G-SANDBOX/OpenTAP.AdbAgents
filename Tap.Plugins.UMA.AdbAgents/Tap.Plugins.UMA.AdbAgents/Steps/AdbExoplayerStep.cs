@@ -25,7 +25,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
         [Display("Exolist", Group: "Configuration", Order: 51.0)]
-        public string Exolist { get; set; }
+        public Enabled<string> Exolist { get; set; }
 
         [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
         [Display("Key Events", Group: "Configuration", Order: 51.1,
@@ -36,7 +36,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         public AdbExoplayerStep() : base()
         {
-            Exolist = ExoplayerInstrument.AXINOM;
+            Exolist = new Enabled<string>() { IsEnabled = true, Value = ExoplayerInstrument.AXINOM };
+
             KeyEvents = new List<KeyEvent>() {
                 new KeyEvent(KeyEvent.ActionEnum.KeyPress, 62, 1, "Select exolist"),
                 new KeyEvent(KeyEvent.ActionEnum.KeyPress, 66, 1, "Open exolist"),
@@ -52,7 +53,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void StartAgent()
         {
-            Instrument.Start(DeviceId, Exolist, KeyEvents);
+            Instrument.Start(DeviceId, Exolist.IsEnabled ? Exolist.Value : null, KeyEvents);
         }
 
         protected override void StopAgent()
