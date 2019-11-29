@@ -82,7 +82,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 }
             }
 
-            // TODO: Handle measurement points
+
+            if (measurementPoints.Count != 0)
+            {
+                foreach (ResultTable table in ExoplayerResultHandler.GetUserExperienceTables(measurementPoints)) { table.PublishToSource(Results); }
+            }
+
             if (audioResults.Count != 0)
             {
                 ExoplayerResultHandler.GetTableFromList("Exoplayer Audio", audioResults).PublishToSource(Results);

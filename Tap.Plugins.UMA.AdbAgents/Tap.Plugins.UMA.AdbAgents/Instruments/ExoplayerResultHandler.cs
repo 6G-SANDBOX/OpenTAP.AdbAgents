@@ -17,6 +17,25 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 {
     public static class ExoplayerResultHandler
     {
+        private static Tuple<string, string, string>[] delayDefinitions = new Tuple<string, string, string>[] {
+            new Tuple<string, string, string>(
+                "Time to load first media frame", "Media File Playback - Start", "Media File Playback - First Picture"),
+            new Tuple<string, string, string>(
+                "Open the AUT", "App Initialization Start - Login Not Required", "App Started")
+        };
+
+        private class MeasurementPoint
+        {
+            public ulong Timestamp;
+            public string Name;
+
+            public MeasurementPoint(ExoplayerResult result)
+            {
+                this.Timestamp = result.Timestamp;
+                this.Name = result.MeasurementPoint;
+            }
+        }
+
         public static ResultTable GetTableFromList(string name, List<ExoplayerResult> results)
         {
             List<ulong> timestamps = new List<ulong>();
@@ -58,6 +77,54 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             }
 
             return new ResultTable(name, resultColumns.ToArray());
+        }
+
+        public static List<ResultTable> GetUserExperienceTables(List<ExoplayerResult> results)
+        {
+            List<ResultTable> res = new List<ResultTable>();
+            List<MeasurementPoint> measurementPoints = results.Select((r) => new MeasurementPoint(r)).ToList();
+
+            foreach (var definition in delayDefinitions)
+            {
+                string name = definition.Item1;
+                string start = definition.Item2;
+                string end = definition.Item3;
+                List<Tuple<ulong, double>> delays = getDelays(start, end, measurementPoints);
+
+                foreach (var delay in getDelays(start, end, measurementPoints))
+                {
+                    // TODO: Create ResultTables
+                }
+            }
+
+            return res;
+        }
+
+        private static List<Tuple<ulong, double>> getDelays(string start, string end, List<MeasurementPoint> points)
+        {
+            List<Tuple<ulong, double>> res = new List<Tuple<ulong, double>>();
+
+            ulong? startTime = null;
+
+            foreach (MeasurementPoint point in points)
+            {
+                if (point.Name == start)
+                {
+                    startTime = point.Timestamp;
+                }
+                else if (point.Name == end)
+                {
+                    if (startTime.HasValue)
+                    {
+                        res.Add(new Tuple<ulong, double>(
+                            (startTime.Value + point.Timestamp) / 2,
+                            (point.Timestamp - startTime.Value) / 1000.0 ));
+
+                        startTime = null;
+                    }
+                }
+            }
+            return res;
         }
     }
 }
