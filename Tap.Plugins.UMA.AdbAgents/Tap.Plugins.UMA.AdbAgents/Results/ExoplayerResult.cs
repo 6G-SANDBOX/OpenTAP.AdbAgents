@@ -18,39 +18,25 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public enum KindEnum { MeasurementPoint, Video, Audio }
 
         private static readonly string MEAS_POINT_TIME = @"(\d+-\d+-\d+T\d+:\d+:\d+.\d+)";
+        private static Regex regex = new Regex( $@"{DATETIME}.*TriangleInstr: {MEAS_POINT_TIME}\t(.*)", RegexOptions.Compiled);
+        private static Regex exoplayerInfo = new Regex( @"""(audio|video)/(.*)\((.*)\)""", RegexOptions.Compiled);
         private static char[] space = new char[] { ' ' };
         private static char[] colon = new char[] { ':' };
         private static char[] x = new char[] { 'x' };
         private static char[] tab = new char[] { '\t' };
 
-
-        private static Regex regex = new Regex(
-            $@"{DATETIME}.*TriangleInstr: {MEAS_POINT_TIME}\t(.*)",
-            RegexOptions.Compiled);
-
-        private static Regex exoplayerInfo = new Regex(
-            @"""(audio|video)/(.*)\((.*)\)"""
-            );
-
-        public static string[] COLUMNS = new string[] {
-            "Timestamp"
-        };
-
-        public override string[] GetColumns() { return COLUMNS; }
-
         public string UseCase;
         public string Feature;
         public string MeasurementPoint;
         public KindEnum Kind;
-        public Dictionary<string, IConvertible> extraValues;
+        public Dictionary<string, IConvertible> ExtraValues;
         
         public ExoplayerResult()
         {
             LogTime = DateTime.MinValue;
             Timestamp = 0;
             UseCase = Feature = MeasurementPoint = string.Empty;
-
-            extraValues = new Dictionary<string, IConvertible>();
+            ExtraValues = new Dictionary<string, IConvertible>();
 
             Valid = false;
         }
@@ -121,7 +107,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             {
                 for (int i = 1; i <= values.Length; i++)
                 {
-                    extraValues[$"Value {i}"] = values[i-1];
+                    ExtraValues[$"Value {i}"] = values[i-1];
                 }
                 return true;
             }
@@ -133,7 +119,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 
                     if (match.Success)
                     {
-                        extraValues["codec"] = match.Groups[2].Value;
+                        ExtraValues["codec"] = match.Groups[2].Value;
 
                         return parseExtras(match.Groups[3].Value);
                     }
@@ -157,13 +143,16 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                     if (Kind == KindEnum.Video && key == "r")
                     {
                         pieces = strValue.Split(x);
-                        extraValues["width"] = int.Parse(pieces[0]);
-                        extraValues["height"] = int.Parse(pieces[1]);
+                        ulong w = ulong.Parse(pieces[0]);
+                        ulong h = ulong.Parse(pieces[1]);
+                        ExtraValues["width"] = w;
+                        ExtraValues["height"] = h;
+                        ExtraValues["pixel count"] = w * h;
                     }
                     else
                     {
                         double? dValue = maybeDouble(strValue);
-                        extraValues[key] = dValue.HasValue ? (IConvertible)dValue.Value : strValue;
+                        ExtraValues[key] = dValue.HasValue ? (IConvertible)dValue.Value : strValue;
                     }
                 }
                 catch { return false; }
@@ -171,14 +160,13 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             return true;
         }
 
-        public override IConvertible GetValue(string column)
-        {
-            // TODO: Since there are multiple kinds of values this logic should not be used
-            switch (column)
-            {
-                case "Timestamp": return Timestamp;
-                default: throw new Exception($"Unrecognized column '{column}'");
-            }
-        }
+        #region Unused 
+        // Since there are multiple kinds of values this logic should not be used
+
+        public override string[] GetColumns() { return new string[] { }; }
+
+        public override IConvertible GetValue(string column) { throw new Exception("You are not supposed to use ExoplayerResult.GetValue()"); }
+
+        #endregion
     }
 }

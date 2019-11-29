@@ -96,7 +96,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
             foreach (ExoplayerResult result in results)
             {
-                foreach (var key in result.extraValues.Keys)
+                foreach (var key in result.ExtraValues.Keys)
                 {
                     if (!columns.ContainsKey(key)) { columns[key] = new List<IConvertible>(); }
                 }
@@ -107,7 +107,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             {
                 List<string> missingKeys = new List<string>(columns.Keys);
                 timestamps.Add(result.Timestamp);
-                foreach (var keyValue in result.extraValues)
+                foreach (var keyValue in result.ExtraValues)
                 {
                     columns[keyValue.Key].Add(keyValue.Value);
                     missingKeys.Remove(keyValue.Key);
