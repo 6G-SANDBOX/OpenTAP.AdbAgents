@@ -111,6 +111,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             }
         }
 
+        /// <summary>
+        /// Returns the list of results obtained. Use null as tableName to disable result publishing
+        /// </summary>
         protected List<T> parseResults<T>(string tableName, string[] logcat, DateTime startTime) where T : ResultBase, new()
         {
             string[] columnNames = new T().GetColumns();
@@ -151,23 +154,27 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 }
             }
 
-            if (results.Count > 0)
+            if (!string.IsNullOrWhiteSpace(tableName))
             {
-                List<ResultColumn> resultColumns = new List<ResultColumn>();
-
-                foreach (string column in columnNames)
+                if (results.Count > 0)
                 {
-                    resultColumns.Add(new ResultColumn(column, resultLists[column].ToArray()));
-                }
+                    List<ResultColumn> resultColumns = new List<ResultColumn>();
 
-                ResultTable table = new ResultTable(tableName, resultColumns.ToArray());
-                table.PublishToSource(Results);
-                Log.Debug($"Published {results.Count} results, {ignored} logcat lines ignored (previous to {startTime.ToLongTimeString()})");
+                    foreach (string column in columnNames)
+                    {
+                        resultColumns.Add(new ResultColumn(column, resultLists[column].ToArray()));
+                    }
+
+                    ResultTable table = new ResultTable(tableName, resultColumns.ToArray());
+                    table.PublishToSource(Results);
+                    Log.Debug($"Published {results.Count} results, {ignored} logcat lines ignored (previous to {startTime.ToLongTimeString()})");
+                }
+                else
+                {
+                    Log.Warning($"No results retrieved, ignored {ignored} results (previous to {startTime.ToLongTimeString()}).");
+                }
             }
-            else
-            {
-                Log.Warning($"No results retrieved, ignored {ignored} results (previous to {startTime.ToLongTimeString()}).");
-            }
+            
             return results;
         }
     }

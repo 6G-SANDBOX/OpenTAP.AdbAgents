@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using OpenTap;
 using Tap.Plugins.UMA.AdbAgents.Instruments;
 using Tap.Plugins.UMA.AdbAgents.Results;
+using Tap.Plugins.UMA.Extensions;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
@@ -41,7 +42,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             KeyEvents = new List<KeyEvent>() {
                 new KeyEvent(KeyEvent.ActionEnum.KeyPress, 62, 1, "Select exolist"),
                 new KeyEvent(KeyEvent.ActionEnum.KeyPress, 66, 1, "Open exolist"),
-                new KeyEvent(KeyEvent.ActionEnum.KeyPress, 20, 2, "Select Video"),
+                new KeyEvent(KeyEvent.ActionEnum.KeyPress, 20, 3, "Select Video"),
                 new KeyEvent(KeyEvent.ActionEnum.KeyPress, 66, 1, "Start video"),
             };
         }
@@ -63,12 +64,71 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void ParseResults(string[] logcatOutput, DateTime startTime)
         {
-            //List<PingResult> results = parseResults<PingResult>("ADB Ping Agent", logcatOutput, startTime);
+            // Parse the results, but do not publish them
+            List<ExoplayerResult> results = parseResults<ExoplayerResult>(null, logcatOutput, startTime);
 
-            // Additional processing for aggregated measurements
-            List<string> columns = new List<string>() { "Timestamp", "Total", "Success", "Failed", "Success Ratio", "Failed Ratio" };
-            
-            Results.Publish("ADB Ping Agent Aggregated", columns, 1,1,1,1,1,1,1);
+            // Separate by kind
+            List<ExoplayerResult> measurementPoints = new List<ExoplayerResult>();
+            List<ExoplayerResult> videoResults = new List<ExoplayerResult>();
+            List<ExoplayerResult> audioResults = new List<ExoplayerResult>();
+
+            foreach (ExoplayerResult result in results)
+            {
+                switch (result.Kind)
+                {
+                    case ExoplayerResult.KindEnum.MeasurementPoint: measurementPoints.Add(result); break;
+                    case ExoplayerResult.KindEnum.Video: videoResults.Add(result); break;
+                    case ExoplayerResult.KindEnum.Audio: audioResults.Add(result); break;
+                }
+            }
+
+            // TODO: Handle measurement points
+            if (audioResults.Count != 0) { publishList("Exoplayer Audio", audioResults); }
+            if (videoResults.Count != 0) { publishList("Exoplayer Video", videoResults); }
+        }
+
+        private void publishList(string name, List<ExoplayerResult> results)
+        {
+            List<ulong> timestamps = new List<ulong>();
+
+            // Generate all column placeholders
+            Dictionary<string, List<IConvertible>> columns = new Dictionary<string, List<IConvertible>>();
+
+            foreach (ExoplayerResult result in results)
+            {
+                foreach (var key in result.extraValues.Keys)
+                {
+                    if (!columns.ContainsKey(key)) { columns[key] = new List<IConvertible>(); }
+                }
+            }
+
+            // Fill the columns
+            foreach (ExoplayerResult result in results)
+            {
+                List<string> missingKeys = new List<string>(columns.Keys);
+                timestamps.Add(result.Timestamp);
+                foreach (var keyValue in result.extraValues)
+                {
+                    columns[keyValue.Key].Add(keyValue.Value);
+                    missingKeys.Remove(keyValue.Key);
+                }
+
+                foreach (string key in missingKeys)
+                {
+                    columns[key].Add(null);
+                }
+            }
+
+            // Prepare columns, publish table
+            List<ResultColumn> resultColumns = new List<ResultColumn>();
+            resultColumns.Add(new ResultColumn("Timestamp", timestamps.ToArray()));
+            foreach (var keyValue in columns)
+            {
+                resultColumns.Add(new ResultColumn(keyValue.Key, keyValue.Value.ToArray()));
+            }
+
+            ResultTable table = new ResultTable(name, resultColumns.ToArray());
+            table.PublishToSource(Results);
         }
     }
 }
