@@ -83,52 +83,15 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             }
 
             // TODO: Handle measurement points
-            if (audioResults.Count != 0) { publishList("Exoplayer Audio", audioResults); }
-            if (videoResults.Count != 0) { publishList("Exoplayer Video", videoResults); }
-        }
-
-        private void publishList(string name, List<ExoplayerResult> results)
-        {
-            List<ulong> timestamps = new List<ulong>();
-
-            // Generate all column placeholders
-            Dictionary<string, List<IConvertible>> columns = new Dictionary<string, List<IConvertible>>();
-
-            foreach (ExoplayerResult result in results)
+            if (audioResults.Count != 0)
             {
-                foreach (var key in result.ExtraValues.Keys)
-                {
-                    if (!columns.ContainsKey(key)) { columns[key] = new List<IConvertible>(); }
-                }
+                ExoplayerResultHandler.GetTableFromList("Exoplayer Audio", audioResults).PublishToSource(Results);
             }
 
-            // Fill the columns
-            foreach (ExoplayerResult result in results)
+            if (videoResults.Count != 0)
             {
-                List<string> missingKeys = new List<string>(columns.Keys);
-                timestamps.Add(result.Timestamp);
-                foreach (var keyValue in result.ExtraValues)
-                {
-                    columns[keyValue.Key].Add(keyValue.Value);
-                    missingKeys.Remove(keyValue.Key);
-                }
-
-                foreach (string key in missingKeys)
-                {
-                    columns[key].Add(null);
-                }
+                ExoplayerResultHandler.GetTableFromList("Exoplayer Video", videoResults).PublishToSource(Results);
             }
-
-            // Prepare columns, publish table
-            List<ResultColumn> resultColumns = new List<ResultColumn>();
-            resultColumns.Add(new ResultColumn("Timestamp", timestamps.ToArray()));
-            foreach (var keyValue in columns)
-            {
-                resultColumns.Add(new ResultColumn(keyValue.Key, keyValue.Value.ToArray()));
-            }
-
-            ResultTable table = new ResultTable(name, resultColumns.ToArray());
-            table.PublishToSource(Results);
         }
     }
 }
