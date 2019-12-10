@@ -64,16 +64,16 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
             Adb.ExecuteAdbCommand(command, DeviceId);
             TapThread.Sleep(3000);
-            if (keys != null) { PressKeys(keys); }
+            if (keys != null) { PressKeys(keys, DeviceId); }
         }
 
         public void Stop(string DeviceId = null)
         {
-            Adb.ExecuteAdbCommand($"shell am force-stop {PACKAGE}");
+            Adb.ExecuteAdbCommand($"shell am force-stop {PACKAGE}", DeviceId);
             TapThread.Sleep(500);
         }
 
-        public void PressKeys(List<KeyEvent> keys)
+        public void PressKeys(List<KeyEvent> keys, string deviceId = null)
         {
             foreach (KeyEvent key in keys)
             {
@@ -83,7 +83,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
                     {
                         case KeyEvent.ActionEnum.KeyPress:
                             Log.Debug($"Pressing key {key.Code} (repeat {i}) '{key.Comment}'");
-                            Adb.ExecuteAdbCommand($"shell input keyevent {key.Code}");
+                            Adb.ExecuteAdbCommand($"shell input keyevent {key.Code}", deviceId);
                             TapThread.Sleep(500);
                             break;
                         case KeyEvent.ActionEnum.Wait:

@@ -10,7 +10,7 @@ $(GitVersion) - Gets the version from Git.
 <Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" Version="1.1.2">
   <Description>Adb Agents plugin. Requires Tap.Plugins.UMA.Android</Description>
   <Dependencies>
-    <PackageDependency Package="UMA.Android" Version="^1.0.0" />
+    <PackageDependency Package="UMA.Android" Version="^1.0.2" />
   </Dependencies>
   <Files>
     <File Path="UMA\Tap.Plugins.UMA.AdbAgents.dll">
