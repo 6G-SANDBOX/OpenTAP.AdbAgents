@@ -37,6 +37,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         public AdbExoplayerStep() : base()
         {
+            this.LogcatThreshold = 25; // Increased by default because Co measurement points tend to be filtered
             Exolist = new Enabled<string>() { IsEnabled = true, Value = ExoplayerInstrument.AXINOM };
 
             KeyEvents = new List<KeyEvent>() {

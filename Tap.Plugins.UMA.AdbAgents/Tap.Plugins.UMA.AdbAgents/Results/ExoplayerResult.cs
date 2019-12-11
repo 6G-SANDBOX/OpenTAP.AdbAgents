@@ -18,7 +18,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public enum KindEnum { MeasurementPoint, Video, Audio }
 
         private static readonly string MEAS_POINT_TIME = @"(\d+-\d+-\d+T\d+:\d+:\d+.\d+)";
-        private static Regex regex = new Regex( $@"{DATETIME}.*TriangleInstr: {MEAS_POINT_TIME}\t(.*)", RegexOptions.Compiled);
+        private static Regex regex = new Regex( $@"{DATETIME}.*TriangleInstr: {MEAS_POINT_TIME}\s(.*)", RegexOptions.Compiled);
         private static Regex exoplayerInfo = new Regex( @"""(audio|video)/(.*)\((.*)\)""", RegexOptions.Compiled);
         private static char[] space = new char[] { ' ' };
         private static char[] colon = new char[] { ':' };

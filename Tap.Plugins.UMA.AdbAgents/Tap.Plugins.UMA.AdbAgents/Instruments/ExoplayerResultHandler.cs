@@ -89,11 +89,25 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 string name = definition.Item1;
                 string start = definition.Item2;
                 string end = definition.Item3;
-                List<Tuple<ulong, double>> delays = getDelays(start, end, measurementPoints);
+                List<Tuple<ulong, double>> delayTuples = getDelays(start, end, measurementPoints);
 
-                foreach (var delay in getDelays(start, end, measurementPoints))
+                if (delayTuples.Count != 0)
                 {
-                    // TODO: Create ResultTables
+                    List<ulong> timestamps = new List<ulong>();
+                    List<double> delays = new List<double>();
+
+                    foreach (var item in delayTuples)
+                    {
+                        timestamps.Add(item.Item1);
+                        delays.Add(item.Item2);
+                    }
+
+                    ResultTable table = new ResultTable(name, new ResultColumn[] {
+                        new ResultColumn("Timestamp", timestamps.ToArray()),
+                        new ResultColumn("Delay", delays.ToArray())
+                    });
+
+                    res.Add(table);
                 }
             }
 
