@@ -25,7 +25,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 
         public override string[] GetColumns() { return COLUMNS; }
 
-        public int IcmpSeq;
+        public long IcmpSeq;
         public bool Success;
         public double? Delay;
 
@@ -46,7 +46,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             {
                 LogTime = logcatDate(match.Groups[1].Value);
                 Timestamp = ulong.Parse(match.Groups[2].Value);
-                IcmpSeq = int.Parse(match.Groups[3].Value) + 1;
+                IcmpSeq = long.Parse(match.Groups[3].Value) + 1;
                 Delay = maybeDouble(match.Groups[4].Value);
 
                 // We expect one try per second, if the delay is longer we can consider that the request 

@@ -125,7 +125,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 resultLists[column] = new List<IConvertible>();
             }
 
-            Log.Info($"Parsing {tableName} results from logcat (starting at {startTime.ToLongTimeString()})");
+            Log.Info($"Parsing {tableName} results from logcat (starting at {startTime.ToLongTimeString()}). Logcat length: {logcat.Length}");
             int ignored = 0;
 
             foreach (string line in logcat)

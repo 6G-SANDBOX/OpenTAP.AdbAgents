@@ -38,9 +38,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public double PacketLoss;
 
         // Unpublished data
-        public int Sequence;
-        public int Lost;
-        public int Sent;
+        public long Sequence;
+        public long Lost;
+        public long Sent;
 
         public iPerfResult()
         {
@@ -82,7 +82,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             if (match.Success)
             {
                 Throughput = double.Parse(match.Groups[11].Value);
-                Sequence = int.Parse(match.Groups[3].Value);
+                Sequence = long.Parse(match.Groups[3].Value);
 
                 return parseUdp(match.Groups[14].Value);
             }
@@ -98,8 +98,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 Jitter = double.Parse(match.Groups[1].Value);
                 PacketLoss = double.Parse(match.Groups[6].Value);
 
-                Lost = int.Parse(match.Groups[4].Value);
-                Sent = int.Parse(match.Groups[5].Value);
+                Lost = long.Parse(match.Groups[4].Value);
+                Sent = long.Parse(match.Groups[5].Value);
             }
             return true;
         }

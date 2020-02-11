@@ -34,15 +34,15 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public override string[] GetColumns() { return COLUMNS; }
 
         public double UsedCpuPerCent;
-        public int UsedRam;
-        public int AvailableRam;
-        public int TotalRam;
+        public long UsedRam;
+        public long AvailableRam;
+        public long TotalRam;
         public double UsedRamPerCent;
 
-        public int PacketsSent;
-        public int PacketsReceived;
-        public int BytesSent;
-        public int BytesReceived;
+        public long PacketsSent;
+        public long PacketsReceived;
+        public long BytesSent;
+        public long BytesReceived;
 
         public string Operator;
         public string Network;
@@ -75,14 +75,14 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 LogTime = logcatDate(match.Groups[1].Value);
                 Timestamp = ulong.Parse(match.Groups[2].Value);
                 UsedCpuPerCent = double.Parse(match.Groups[3].Value);
-                UsedRam = int.Parse(match.Groups[6].Value);
-                AvailableRam = int.Parse(match.Groups[7].Value);
+                UsedRam = long.Parse(match.Groups[6].Value);
+                AvailableRam = long.Parse(match.Groups[7].Value);
                 TotalRam = UsedRam + AvailableRam;
                 UsedRamPerCent = ((double)UsedRam / TotalRam) * 100.0;
-                PacketsReceived = int.Parse(match.Groups[8].Value);
-                PacketsSent = int.Parse(match.Groups[9].Value);
-                BytesReceived = int.Parse(match.Groups[10].Value);
-                BytesSent = int.Parse(match.Groups[11].Value);
+                PacketsReceived = long.Parse(match.Groups[8].Value);
+                PacketsSent = long.Parse(match.Groups[9].Value);
+                BytesReceived = long.Parse(match.Groups[10].Value);
+                BytesSent = long.Parse(match.Groups[11].Value);
 
                 Valid = parseNetwork(match.Groups[12].Value);
             }
