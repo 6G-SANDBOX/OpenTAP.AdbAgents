@@ -18,7 +18,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
     [Display("Adb Exoplayer", Groups: new string[] { "UMA", "Agents" })]
     public class AdbExoplayerStep : AdbAgentBaseStep
     {
-        private static readonly string DEVICE_FILE = "sdcard/adb_exoplayer.log";
+        private static readonly string DEVICE_FILE = "sdcard/adb_exoplayer";
         private static readonly string AGENT_TAG = "TriangleInstr";
 
         [Display("Agent", Order: 1.0)]

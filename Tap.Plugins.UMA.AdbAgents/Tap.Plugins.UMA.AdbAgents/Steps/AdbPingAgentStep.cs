@@ -17,7 +17,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
     [Display("Adb Ping Agent", Groups: new string[] { "UMA", "Agents" })]
     public class AdbPingAgentStep : AdbAgentBaseStep
     {
-        private static readonly string DEVICE_FILE = "sdcard/adb_ping_agent.log";
+        private static readonly string DEVICE_FILE = "sdcard/adb_ping_agent";
         private static readonly string AGENT_TAG = "ping.Report";
 
         [Display("Agent", Order: 1.0)]

@@ -42,9 +42,18 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
         public int LogcatThreshold { get; set; }
 
-        [Display("Background Logcat", Order: 2.1)]
+        [Display("Background Logcat", Order: 2.2)]
         [EnabledIf("Action", ActionEnum.Stop, HideIfDisabled = true)]
         public Input<BackgroundLogcat> LogcatInput { get; set; }
+
+        [Display("Parse Logcat on end", Order: 2.3)]
+        [EnabledIf("Action", ActionEnum.Measure, ActionEnum.Stop, HideIfDisabled = true)]
+        public bool ParseLogcatFiles { get; set; }
+
+        [Display("Delete Logcat on end", Order: 2.4)]
+        [EnabledIf("ParseLogcatFiles", true, HideIfDisabled = false)]
+        [EnabledIf("Action", ActionEnum.Measure, ActionEnum.Stop, HideIfDisabled = true)]
+        public bool DeleteLogcatFiles {get; set;}
 
         [Output]
         [XmlIgnore]
@@ -58,23 +67,35 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             MeasurementMode = WaitMode.Time;
             MeasurementTime = 10;
             LogcatThreshold = 15;
+
+            ParseLogcatFiles = true;
+            DeleteLogcatFiles = true;
         }
 
         protected abstract void StartAgent();
         protected abstract void StopAgent();
         protected abstract void ParseResults(string[] logcatOutput, DateTime startTime);
 
-        protected void DoRun(AdbInstrument adb, string deviceFile, string agentTag)
+        protected void DoRun(AdbInstrument adb, string deviceFolder, string agentTag)
         {
             BackgroundLogcat logcat;
+            string deviceFile;
+
             // Prepare logcat
             if (Action == ActionEnum.Start || Action == ActionEnum.Measure)
             {
-                adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
+                if (!ensureFolder(adb, deviceFolder))
+                {
+                    // Could not check or create the output folder
+                    Log.Error("Unable to access agent output folder. Aborting step");
+                    return;
+                }
+                
+                deviceFile = $"{deviceFolder}/{DateTime.UtcNow.ToString("yyMMdd_HHmmss")}.log";
 
                 logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
                     filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
-
+                
                 logcat.StartTime = logcat.StartTime.AddSeconds(-LogcatThreshold);
 
                 // Set the created logcat as output
@@ -88,6 +109,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             else
             {
                 logcat = LogcatInput.Value;
+                deviceFile = logcat.DeviceFilename;  // Overwrite with the file name received from the input.
             }
 
             // Measure
@@ -101,13 +123,56 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             {
                 StopAgent();
                 TapThread.Sleep(500);
+
                 logcat.Terminate();
                 TapThread.Sleep(500);
-                string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
 
-                ParseResults(res, logcat.StartTime);
+                var result = logcat.AdbProcess.Result;
 
-                TapThread.Sleep(1000);
+                Log.Debug($"Success -> {result.Success}, Length: {result.Output.Count}");
+                foreach (string line in result.Output)
+                {
+                    Log.Debug(line);
+                }
+
+                if (ParseLogcatFiles)
+                {
+                    string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
+                    TapThread.Sleep(500);
+                    ParseResults(res, logcat.StartTime);
+
+                    if (DeleteLogcatFiles)
+                    {
+                        TapThread.Sleep(1000);
+                        adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
+                    }
+                }
+                TapThread.Sleep(500);
+            }
+        }
+
+        private bool ensureFolder(AdbInstrument adb, string folder)
+        {
+            AdbCommandResult result = adb.ExecuteAdbCommand($"shell \"ls {folder}\"", DeviceId, retries: 0);
+            string output = (result.Output.Count != 0) ? result.Output[0] : "";
+
+            if (!result.Success && output.Contains("No such file"))
+            {
+                Log.Info("Agent output folder not found. Creating");
+
+                result = adb.ExecuteAdbCommand($"shell \"mkdir {folder}\"", DeviceId, retries: 0);
+
+                if (result.Success == false)
+                {
+                    Log.Error("Could not create agent output folder.");
+                    return false;
+                }
+
+                return true;
+            }
+            else
+            {
+                return result.Success;
             }
         }
 

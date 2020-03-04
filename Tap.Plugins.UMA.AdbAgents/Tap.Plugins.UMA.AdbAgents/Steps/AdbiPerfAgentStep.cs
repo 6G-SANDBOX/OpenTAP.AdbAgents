@@ -20,8 +20,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
     [Display("Adb iPerf Agent", Groups: new string[] { "UMA", "Agents" })]
     public class AdbiPerfAgentStep : AdbAgentBaseStep
     {
-        private static readonly string DEVICE_FILE_CLIENT = "sdcard/adb_iperf_agent_client.log";
-        private static readonly string DEVICE_FILE_SERVER = "sdcard/adb_iperf_agent_server.log";
+        private static readonly string DEVICE_FILE_CLIENT = "sdcard/adb_iperf_agent_client";
+        private static readonly string DEVICE_FILE_SERVER = "sdcard/adb_iperf_agent_server";
         private static readonly string AGENT_TAG_CLIENT = "iperf.Client";
         private static readonly string AGENT_TAG_SERVER = "iperf.Server";
 

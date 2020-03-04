@@ -17,7 +17,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
     [Display("Adb Resource Agent", Groups: new string[] { "UMA", "Agents" })]
     public class AdbResourceAgentStep : AdbAgentBaseStep
     {
-        private static readonly string DEVICE_FILE = "sdcard/adb_res_mon.log";
+        private static readonly string DEVICE_FILE = "sdcard/adb_resource_agent";
         private static readonly string AGENT_TAG = "resourceAgent.ResourceAgentTask";
 
         [Display("Agent", Order: 1.0)]
