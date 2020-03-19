@@ -1,8 +1,9 @@
-﻿using System;
+﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
+// Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using OpenTap;
 using Tap.Plugins.UMA.Android.Instruments;

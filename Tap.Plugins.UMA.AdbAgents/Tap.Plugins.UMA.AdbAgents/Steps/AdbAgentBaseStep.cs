@@ -1,19 +1,13 @@
 ﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
 // Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
-//
-// This file cannot be modified or redistributed. This header cannot be removed.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 using OpenTap;
-using Tap.Plugins.UMA.AdbAgents.Instruments;
 using Tap.Plugins.UMA.Android.Instruments;
 using Tap.Plugins.UMA.Android.Instruments.Logcat;
 using Tap.Plugins.UMA.Extensions;
-using Tap.Plugins.UMA.AdbAgents.Steps;
 using Tap.Plugins.UMA.AdbAgents.Results;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
