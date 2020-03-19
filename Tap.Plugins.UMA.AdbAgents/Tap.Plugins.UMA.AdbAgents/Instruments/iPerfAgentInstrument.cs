@@ -39,7 +39,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             string start = (role == RoleEnum.Client) ? CLIENT_START : SERVER_START;
             string cmd = iPerfParameters(role, host, port, parallel, udp, extra);
 
-            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
             TapThread.Sleep(500);
             Adb.ExecuteAdbCommand(parameters(start, extras: cmd), DeviceId);
         }
@@ -48,7 +48,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
         {
             string stop = (role == RoleEnum.Client) ? CLIENT_STOP : SERVER_STOP;
             // Bring to top
-            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP);
+            Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
             TapThread.Sleep(500);
             // Send stop intent
             Adb.ExecuteAdbCommand(parameters(stop, extras: null), DeviceId);
