@@ -72,6 +72,30 @@
     <Compile Include="Steps\AdbResourceAgentStep.cs" />
     <Compile Include="Steps\MeasurementStepBase.cs" />
     <Compile Include="Results\ResourcesResult.cs" />
+    <None Include="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\Android Ping Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\Android Resource Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\com.uma.iperf.1.0.1.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\com.uma.ping.1.0.0.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.0.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="package.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
