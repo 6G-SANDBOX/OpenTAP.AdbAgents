@@ -96,6 +96,9 @@
     <None Include="AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="AdbAgents\Example.TapPlan">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="package.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

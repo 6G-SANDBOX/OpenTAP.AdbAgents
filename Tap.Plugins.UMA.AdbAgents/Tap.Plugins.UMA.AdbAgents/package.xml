@@ -25,5 +25,7 @@ $(GitVersion) - Gets the version from Git.
     <File Path="UMA\AdbAgents\Agents\com.uma.resourceAgent.1.0.0.apk"/>
     <File Path="UMA\AdbAgents\Agents\Exoplayer Agent Documentation.docx"/>
     <File Path="UMA\AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk"/>
+
+    <File Path="UMA\AdbAgents\Example.TapPlan"/>
   </Files>
 </Package>

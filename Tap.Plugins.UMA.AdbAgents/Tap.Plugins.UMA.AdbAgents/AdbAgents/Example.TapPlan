@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TestPlan type="OpenTap.TestPlan" Locked="false">
+  <Steps>
+    <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="539af81e-d935-48d0-b435-7bda13ab3dca">
+      <Message>This is an example test plan that uses all the available Android agents. Press Cancel at any time to stop the test plan.</Message>
+      <Title>Example</Title>
+      <Buttons>OkCancel</Buttons>
+      <PositiveAnswer>Pass</PositiveAnswer>
+      <NegativeAnswer>Error</NegativeAnswer>
+      <UseTimeout>false</UseTimeout>
+      <Timeout>5</Timeout>
+      <DefaultAnswer>NotSet</DefaultAnswer>
+      <Enabled>true</Enabled>
+      <Name>Dialog</Name>
+      <ChildTestSteps />
+      <BreakConditions>Inherit</BreakConditions>
+    </TestStep>
+    <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="934e9a3d-3b41-4b5a-b566-9296a7f771c0">
+      <Message>Each step (except the last) is configured to run for the duration of the child steps. The last step is configured to run for 10 seconds.</Message>
+      <Title>Example</Title>
+      <Buttons>OkCancel</Buttons>
+      <PositiveAnswer>Pass</PositiveAnswer>
+      <NegativeAnswer>Error</NegativeAnswer>
+      <UseTimeout>false</UseTimeout>
+      <Timeout>5</Timeout>
+      <DefaultAnswer>NotSet</DefaultAnswer>
+      <Enabled>true</Enabled>
+      <Name>Dialog</Name>
+      <ChildTestSteps />
+      <BreakConditions>Inherit</BreakConditions>
+    </TestStep>
+    <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="ca8fb195-55b7-451b-8d90-91ffd6ab12b9">
+      <Message>The resource agent does not have any special configuration values.</Message>
+      <Title>Example</Title>
+      <Buttons>OkCancel</Buttons>
+      <PositiveAnswer>Pass</PositiveAnswer>
+      <NegativeAnswer>Error</NegativeAnswer>
+      <UseTimeout>false</UseTimeout>
+      <Timeout>5</Timeout>
+      <DefaultAnswer>NotSet</DefaultAnswer>
+      <Enabled>true</Enabled>
+      <Name>Dialog</Name>
+      <ChildTestSteps />
+      <BreakConditions>Inherit</BreakConditions>
+    </TestStep>
+    <TestStep type="Tap.Plugins.UMA.AdbAgents.Steps.AdbResourceAgentStep" Version="1.0.0" Id="40dd85ba-d08a-4a95-8e96-198ce3147f9c">
+      <Instrument Source="OpenTap.InstrumentSettings">ADB_Res</Instrument>
+      <Action>Measure</Action>
+      <LogcatThreshold>15</LogcatThreshold>
+      <ParseLogcatFiles>true</ParseLogcatFiles>
+      <DeleteLogcatFiles>true</DeleteLogcatFiles>
+      <MeasurementMode>Children</MeasurementMode>
+      <MeasurementTime>10</MeasurementTime>
+      <Enabled>true</Enabled>
+      <Name>Adb Resource Agent</Name>
+      <ChildTestSteps>
+        <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="751381a1-64a2-468d-904c-d44c082a1185">
+          <Message>The Ping Agent step configures the agent for sending ping requests to google's servers.</Message>
+          <Title>Example</Title>
+          <Buttons>OkCancel</Buttons>
+          <PositiveAnswer>Pass</PositiveAnswer>
+          <NegativeAnswer>Error</NegativeAnswer>
+          <UseTimeout>false</UseTimeout>
+          <Timeout>5</Timeout>
+          <DefaultAnswer>NotSet</DefaultAnswer>
+          <Enabled>true</Enabled>
+          <Name>Dialog</Name>
+          <ChildTestSteps />
+          <BreakConditions>Inherit</BreakConditions>
+        </TestStep>
+        <TestStep type="Tap.Plugins.UMA.AdbAgents.Steps.AdbPingAgentStep" Version="1.0.0" Id="6e883c4e-e5fb-4483-bc34-53c555d58f66">
+          <Instrument Source="OpenTap.InstrumentSettings">ADB_Ping</Instrument>
+          <Target>www.google.com</Target>
+          <Ttl>128</Ttl>
+          <Action>Measure</Action>
+          <LogcatThreshold>15</LogcatThreshold>
+          <ParseLogcatFiles>true</ParseLogcatFiles>
+          <DeleteLogcatFiles>true</DeleteLogcatFiles>
+          <MeasurementMode>Children</MeasurementMode>
+          <MeasurementTime>10</MeasurementTime>
+          <Enabled>true</Enabled>
+          <Name>Adb Ping Agent</Name>
+          <ChildTestSteps>
+            <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="04339395-f233-4a6e-8cb9-fef615dcf072">
+              <Message>The iPerf Agent can be configured for starting client and server instances in the Android device. The most common options are available as step settings, while other options can be set using the 'Extra Parameters' setting.</Message>
+              <Title>Example</Title>
+              <Buttons>OkCancel</Buttons>
+              <PositiveAnswer>Pass</PositiveAnswer>
+              <NegativeAnswer>Error</NegativeAnswer>
+              <UseTimeout>false</UseTimeout>
+              <Timeout>5</Timeout>
+              <DefaultAnswer>NotSet</DefaultAnswer>
+              <Enabled>true</Enabled>
+              <Name>Dialog</Name>
+              <ChildTestSteps />
+              <BreakConditions>Inherit</BreakConditions>
+            </TestStep>
+            <TestStep type="Tap.Plugins.UMA.AdbAgents.Steps.AdbiPerfAgentStep" Version="1.0.0" Id="f39705ed-6a96-4776-9102-96fbafa3756d">
+              <Instrument Source="OpenTap.InstrumentSettings">ADB_iPerf</Instrument>
+              <Role>Client</Role>
+              <Host>127.0.0.1</Host>
+              <Port>5001</Port>
+              <Parallel>1</Parallel>
+              <Udp>false</Udp>
+              <ExtraParameters></ExtraParameters>
+              <Action>Measure</Action>
+              <LogcatThreshold>15</LogcatThreshold>
+              <ParseLogcatFiles>true</ParseLogcatFiles>
+              <DeleteLogcatFiles>true</DeleteLogcatFiles>
+              <MeasurementMode>Children</MeasurementMode>
+              <MeasurementTime>4</MeasurementTime>
+              <Enabled>true</Enabled>
+              <Name>Adb iPerf Agent</Name>
+              <ChildTestSteps>
+                <TestStep type="OpenTap.Plugins.BasicSteps.DialogStep" Version="9.5.1+dcc0651a" Id="ae142884-4a17-4aca-918f-5546d16ddc0f">
+                  <Message>The Exoplayer Agent is configured for opening a custom playlist, and starting one of the available videos. You can change the values in 'Key Events' in order to select a different video.</Message>
+                  <Title>Example</Title>
+                  <Buttons>OkCancel</Buttons>
+                  <PositiveAnswer>Pass</PositiveAnswer>
+                  <NegativeAnswer>Error</NegativeAnswer>
+                  <UseTimeout>false</UseTimeout>
+                  <Timeout>5</Timeout>
+                  <DefaultAnswer>NotSet</DefaultAnswer>
+                  <Enabled>true</Enabled>
+                  <Name>Dialog</Name>
+                  <ChildTestSteps />
+                  <BreakConditions>Inherit</BreakConditions>
+                </TestStep>
+                <TestStep type="Tap.Plugins.UMA.AdbAgents.Steps.AdbExoplayerStep" Version="1.0.0" Id="718c444a-9916-4ad9-b27e-ec18acb6c1bb">
+                  <Instrument Source="OpenTap.InstrumentSettings">Exoplayer</Instrument>
+                  <Exolist>
+                    <Value>https://raw.githubusercontent.com/Axinom/dash-test-vectors/master/axinom.exolist.json</Value>
+                    <IsEnabled>true</IsEnabled>
+                  </Exolist>
+                  <KeyEvents>
+                    <KeyEvent>
+                      <Action>KeyPress</Action>
+                      <Code>62</Code>
+                      <Repeat>1</Repeat>
+                      <Comment>Select exolist</Comment>
+                    </KeyEvent>
+                    <KeyEvent>
+                      <Action>KeyPress</Action>
+                      <Code>66</Code>
+                      <Repeat>1</Repeat>
+                      <Comment>Open exolist</Comment>
+                    </KeyEvent>
+                    <KeyEvent>
+                      <Action>KeyPress</Action>
+                      <Code>20</Code>
+                      <Repeat>3</Repeat>
+                      <Comment>Select Video</Comment>
+                    </KeyEvent>
+                    <KeyEvent>
+                      <Action>KeyPress</Action>
+                      <Code>66</Code>
+                      <Repeat>1</Repeat>
+                      <Comment>Start video</Comment>
+                    </KeyEvent>
+                  </KeyEvents>
+                  <Action>Measure</Action>
+                  <LogcatThreshold>25</LogcatThreshold>
+                  <ParseLogcatFiles>true</ParseLogcatFiles>
+                  <DeleteLogcatFiles>true</DeleteLogcatFiles>
+                  <MeasurementMode>Time</MeasurementMode>
+                  <MeasurementTime>10</MeasurementTime>
+                  <Enabled>true</Enabled>
+                  <Name>Adb Exoplayer</Name>
+                  <ChildTestSteps />
+                  <BreakConditions>Inherit</BreakConditions>
+                </TestStep>
+              </ChildTestSteps>
+              <BreakConditions>Inherit</BreakConditions>
+            </TestStep>
+          </ChildTestSteps>
+          <BreakConditions>Inherit</BreakConditions>
+        </TestStep>
+      </ChildTestSteps>
+      <BreakConditions>Inherit</BreakConditions>
+    </TestStep>
+  </Steps>
+  <Package.Dependencies>
+    <Package Name="OpenTAP" Version="9.6.4+6f53deb9" />
+    <Package Name="UMA.AdbAgents" Version="1.2.3" />
+  </Package.Dependencies>
+</TestPlan>
