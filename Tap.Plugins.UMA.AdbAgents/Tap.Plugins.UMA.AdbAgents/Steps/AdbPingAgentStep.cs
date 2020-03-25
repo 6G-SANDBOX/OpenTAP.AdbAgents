@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using OpenTap;
 using Tap.Plugins.UMA.AdbAgents.Instruments;
 using Tap.Plugins.UMA.AdbAgents.Results;
+using Tap.Plugins.UMA.Extensions;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
@@ -63,10 +64,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                 timestamp += result.Timestamp;
             }
 
-            double successRatio = (double)success / (double)total;
+            double successRatio = total != 0 ? (double)success / (double)total : 0;
+            timestamp = total != 0 ? (ulong)(timestamp / (ulong)total) : (ulong)startTime.ToUnixUtcTimestamp();
 
             Results.Publish("ADB Ping Agent Aggregated",  columns, 
-                (ulong)(timestamp/(ulong)total), total, success, total - success, successRatio, 1.0-successRatio);
+                timestamp, total, success, total - success, successRatio, 1.0-successRatio);
         }
     }
 }
