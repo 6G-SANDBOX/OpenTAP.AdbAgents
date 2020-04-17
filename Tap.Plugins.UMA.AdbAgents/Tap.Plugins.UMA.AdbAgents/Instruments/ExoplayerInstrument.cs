@@ -49,7 +49,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             Name = "Exoplayer";
         }
 
-        public void Start(string DeviceId = null, string exolist = null, List<KeyEvent> keys = null)
+        public void Start(string DeviceId, string exolist = null, List<KeyEvent> keys = null)
         {
             string command = $"shell am start -n {PACKAGE}/.{ACTIVITY}";
             if (!string.IsNullOrWhiteSpace(exolist))
@@ -62,13 +62,13 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             if (keys != null) { PressKeys(keys, DeviceId); }
         }
 
-        public void Stop(string DeviceId = null)
+        public void Stop(string DeviceId)
         {
             Adb.ExecuteAdbCommand($"shell am force-stop {PACKAGE}", DeviceId);
             TapThread.Sleep(500);
         }
 
-        public void PressKeys(List<KeyEvent> keys, string deviceId = null)
+        public void PressKeys(List<KeyEvent> keys, string deviceId)
         {
             foreach (KeyEvent key in keys)
             {

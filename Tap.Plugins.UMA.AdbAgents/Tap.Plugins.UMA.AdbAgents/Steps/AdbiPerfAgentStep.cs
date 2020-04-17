@@ -49,7 +49,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         public bool Udp { get; set; }
 
         [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Extra Parameters", Group: "Parameters", Order: 2.5,
+        [Display("Report interval", Group: "Parameters", Order: 2.5)]
+        [Unit("s")]
+        public int Interval { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Extra Parameters", Group: "Parameters", Order: 2.6,
             Description: "Extra parameters to pass to iPerf. Separate parameters with ';', separate keys/values with space\n" +
                          "Example: '-P 4; -B 192.168.2.1'")]
         public string ExtraParameters { get; set; }
@@ -74,9 +79,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             Role = RoleEnum.Client;
             Host = "127.0.0.1";
             Port = 5001;
+
+            Interval = 1;
             ExtraParameters = string.Empty;
 
             Rules.Add(() => (Parallel > 0), "Must be greater than 0, use 1 to disable parallel.", "Parallel");
+            Rules.Add(() => (Interval > 0), "Must be greater than 1", "Interval");
         }
 
         public override void Run()
@@ -88,12 +96,12 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void StartAgent()
         {
-            Instrument.Start(Role, Host, Port, Parallel, Udp, ExtraParameters);
+            Instrument.Start(Role, Host, Port, Parallel, Udp, ExtraParameters, Interval, DeviceId);
         }
 
         protected override void StopAgent()
         {
-            Instrument.Stop(Role);
+            Instrument.Stop(Role, DeviceId);
         }
 
         protected override void ParseResults(string[] logcatOutput, DateTime startTime)
