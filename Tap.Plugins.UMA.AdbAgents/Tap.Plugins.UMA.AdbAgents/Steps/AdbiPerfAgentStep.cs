@@ -111,7 +111,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // In this case we must aggregate the jitter and packet loss of each instance
             if (Udp && isParallel && Role == RoleEnum.Server) 
             {
-                int count = 0, lost = 0, sent = 0;
+                long count = 0, lost = 0, sent = 0;
                 double jitter = 0.0;
 
                 foreach (string line in logcatOutput)
@@ -135,8 +135,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                     {
                         iPerfResult result = new iPerfResult();
                         result.Parse(line);
-                        lost += (int)result.GetValue("Lost");
-                        sent += (int)result.GetValue("Sent");
+                        lost += (long)result.GetValue("Lost");
+                        sent += (long)result.GetValue("Sent");
                         jitter += (double)result.GetValue("Jitter (ms)");
                         count++;
                     }

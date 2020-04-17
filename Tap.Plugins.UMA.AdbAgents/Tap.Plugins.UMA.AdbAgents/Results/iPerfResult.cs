@@ -47,7 +47,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 
         public static bool IsiPerfResult(string line)
         {
-            return regex.IsMatch(line);
+            return iperfRegex.IsMatch(line);
         }
 
         public static bool IsSumResult(string line)
