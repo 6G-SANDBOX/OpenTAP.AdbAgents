@@ -27,10 +27,25 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         [Display("TTL", Group: "Ping", Order: 51.1)]
         public int Ttl { get; set; }
 
+        [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
+        [Display("Size", Group: "Ping", Order: 51.2)]
+        public int Size { get; set; }
+
+        [EnabledIf("Action", ActionEnum.Start, ActionEnum.Measure, HideIfDisabled = true)]
+        [Display("Report interval", Group: "Ping", Order: 51.3)]
+        [Unit("s")]
+        public double Interval { get; set; }
+
         public AdbPingAgentStep() : base()
         {
             Target = "www.google.com";
             Ttl = 128;
+            Size = 56;
+            Interval = 1.0;
+
+            Rules.Add(() => (Size > 0), "Must be greater than 0", "Size");
+            Rules.Add(() => (Interval > 0 && Interval <= 60), "Must be between 0 and 60 seconds", "Interval");
+            Rules.Add(() => (Ttl > 0), "Must be greater than 0", "Ttl");
         }
 
         public override void Run()
@@ -40,7 +55,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected override void StartAgent()
         {
-            Instrument.Start(Target, Ttl, DeviceId);
+            Instrument.Start(Target, Ttl, Size, Interval, DeviceId);
         }
 
         protected override void StopAgent()

@@ -8,6 +8,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
 {
     public class PingResult : ResultBase
     {
+        private static int maxDelayMs = 60100;
+
         private static Regex regex = new Regex(
             $"{DATETIME}.*<<< Timestamp: {INT} ; Time:{INT} ; Delay:(.*) >>>.*",
             RegexOptions.Compiled);
@@ -42,9 +44,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 IcmpSeq = long.Parse(match.Groups[3].Value) + 1;
                 Delay = maybeDouble(match.Groups[4].Value);
 
-                // We expect one try per second, if the delay is longer we can consider that the request 
+                // If the delay is longer than our threshold value we can consider that the request 
                 // was lost (also, the agent probably returned Double.MAX_VALUE)
-                if (Delay.HasValue && Delay > 1100.0) { Delay = null; }
+                if (Delay.HasValue && Delay > maxDelayMs) { Delay = null; }
                 Success = (Delay != null);
 
                 Valid = true;
