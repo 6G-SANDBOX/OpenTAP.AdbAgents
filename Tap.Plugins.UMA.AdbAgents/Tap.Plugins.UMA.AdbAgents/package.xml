@@ -7,7 +7,7 @@ Configuration: Can be any kind of information, such as bit version or git branch
 For Version and Configuration the following macros are available (Only works if the project directory is under Git source control):
 $(GitVersion) - Gets the version from Git.
 -->
-<Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" Version="1.2.4">
+<Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" Version="1.2.5">
   <Description>Adb Agents plugin. Requires Tap.Plugins.UMA.Android</Description>
   <Dependencies>
     <PackageDependency Package="UMA.Android" Version="^1.0.2" />
@@ -21,7 +21,7 @@ $(GitVersion) - Gets the version from Git.
     <File Path="UMA\AdbAgents\Agents\Android Ping Agent Documentation.docx"/>
     <File Path="UMA\AdbAgents\Agents\Android Resource Agent Documentation.docx"/>
     <File Path="UMA\AdbAgents\Agents\com.uma.iperf.1.0.1.apk"/>
-    <File Path="UMA\AdbAgents\Agents\com.uma.ping.1.0.0.apk"/>
+    <File Path="UMA\AdbAgents\Agents\com.uma.ping.1.0.1.apk"/>
     <File Path="UMA\AdbAgents\Agents\com.uma.resourceAgent.1.0.0.apk"/>
     <File Path="UMA\AdbAgents\Agents\Exoplayer Agent Documentation.docx"/>
     <File Path="UMA\AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk"/>

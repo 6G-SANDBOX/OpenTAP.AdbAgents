@@ -35,17 +35,17 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             Name = "ADB_iPerf";
         }
 
-        public void Start(RoleEnum role, string host, int port, int parallel, bool udp, string extra, string DeviceId = null)
+        public void Start(RoleEnum role, string host, int port, int parallel, bool udp, string extra, int interval, string DeviceId)
         {
             string start = (role == RoleEnum.Client) ? CLIENT_START : SERVER_START;
-            string cmd = iPerfParameters(role, host, port, parallel, udp, extra);
+            string cmd = iPerfParameters(role, host, port, parallel, udp, interval, extra);
 
             Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
             TapThread.Sleep(500);
             Adb.ExecuteAdbCommand(parameters(start, extras: cmd), DeviceId);
         }
 
-        public void Stop(RoleEnum role, string DeviceId = null)
+        public void Stop(RoleEnum role, string DeviceId)
         {
             string stop = (role == RoleEnum.Client) ? CLIENT_STOP : SERVER_STOP;
             // Bring to top
@@ -62,9 +62,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             return res += " --user 0";
         }
 
-        private string iPerfParameters(RoleEnum role, string host, int port, int parallel, bool udp, string extra)
+        private string iPerfParameters(RoleEnum role, string host, int port, int parallel, bool udp, int interval, string extra)
         {
-            Dictionary<string, string> dict = parsedParameters(role, host, port, parallel, udp, extra);
+            Dictionary<string, string> dict = parsedParameters(role, host, port, parallel, udp, interval, extra);
             List<string> parameters = new List<string>();
 
             foreach (var pair in dict)
@@ -75,7 +75,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             return string.Join(",", parameters);
         }
 
-        private Dictionary<string, string> parsedParameters(RoleEnum role, string host, int port, int parallel, bool udp, string extra)
+        private Dictionary<string, string> parsedParameters(RoleEnum role, string host, int port, int parallel, bool udp, int interval, string extra)
         {
             char[] semicolon = new char[] { ';' };
             char[] space = new char[] { ' ' };
@@ -91,7 +91,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
 
             res.Add("-p", port.ToString());
             res.Add("-t", "999999");
-            res.Add("-i", "1");
+            res.Add("-i", interval.ToString());
             res.Add("-f", "m");
 
             if (parallel > 1) { res.Add("-P", parallel.ToString()); }

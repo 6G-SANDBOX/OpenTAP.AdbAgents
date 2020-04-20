@@ -25,14 +25,14 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             Name = "ADB_Res";
         }
 
-        public void Start(string DeviceId = null)
+        public void Start(string DeviceId)
         {
             Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
             TapThread.Sleep(500);
             Adb.ExecuteAdbCommand(parameters(START), DeviceId);
         }
 
-        public void Stop(string DeviceId = null)
+        public void Stop(string DeviceId)
         {
             // Bring to top
             Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);

@@ -26,14 +26,14 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             Name = "ADB_Ping";
         }
 
-        public void Start(string target, int ttl, string DeviceId = null)
+        public void Start(string target, int ttl, int size, double interval, string DeviceId)
         {
             Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
             TapThread.Sleep(500);
-            Adb.ExecuteAdbCommand(parameters(START, extras(target, ttl)), DeviceId);
+            Adb.ExecuteAdbCommand(parameters(START, extras(target, ttl, size, interval)), DeviceId);
         }
 
-        public void Stop(string DeviceId = null)
+        public void Stop(string DeviceId)
         {
             // Bring to top
             Adb.ExecuteAdbCommand("shell am start -n " + ACTIVITY + " -f " + ACTIVITY_SINGLE_TOP, DeviceId);
@@ -49,9 +49,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
             return res += " --user 0";
         }
 
-        private string extras(string target, int ttl)
+        private string extras(string target, int ttl, int size, double interval)
         {
-            return $"target={target},ttl={ttl}";
+            return $"target={target},ttl={ttl},size={size},interval={interval.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
         }
     }
 }
