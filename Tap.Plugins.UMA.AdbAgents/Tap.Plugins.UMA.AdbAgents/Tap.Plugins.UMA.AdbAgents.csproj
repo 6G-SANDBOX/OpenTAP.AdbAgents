@@ -87,7 +87,7 @@
     <None Include="AdbAgents\Agents\com.uma.ping.1.0.1.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.0.apk">
+    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.1.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
