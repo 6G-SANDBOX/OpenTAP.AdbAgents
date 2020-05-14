@@ -45,7 +45,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
         public string Psc;
         public int? Rssi;
         public int? Rsrp;
-        public int? Snr;
+        public double? Snr;
         public int? Cqi;
         public int? Rsrq;
 
@@ -56,7 +56,8 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             UsedCpuPerCent = UsedRamPerCent = 0.0;
             UsedRam = AvailableRam = TotalRam = PacketsSent = PacketsReceived = BytesSent = BytesReceived = 0;
             Operator = Network = CellId = Lac = Psc = "Unavailable";
-            Rssi = Rsrp = Snr = Cqi = Rsrq = -1;
+            Rssi = Rsrp = Cqi = Rsrq = -1;
+            Snr = -1.0;
             Valid = false;
         }
 
@@ -95,7 +96,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
                 Rssi = maybeInt(match.Groups[5].Value);
                 Psc = match.Groups[6].Value;
                 Rsrp = maybeInt(match.Groups[7].Value);
-                Snr = maybeInt(match.Groups[8].Value);
+                Snr = maybeDouble(match.Groups[8].Value);
                 Cqi = maybeInt(match.Groups[9].Value);
                 Rsrq = maybeInt(match.Groups[10].Value);
                 return true;
