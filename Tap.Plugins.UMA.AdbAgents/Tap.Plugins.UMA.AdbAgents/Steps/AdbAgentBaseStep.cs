@@ -70,7 +70,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         protected abstract void StopAgent();
         protected abstract void ParseResults(string[] logcatOutput, DateTime startTime);
 
-        protected void DoRun(AdbInstrument adb, string deviceFolder, string agentTag)
+        protected void DoRun(AdbInstrument adb, string filePrefix, string agentTag)
         {
             BackgroundLogcat logcat;
             string deviceFile;
@@ -78,14 +78,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
             // Prepare logcat
             if (Action == ActionEnum.Start || Action == ActionEnum.Measure)
             {
-                if (!ensureFolder(adb, deviceFolder))
-                {
-                    // Could not check or create the output folder
-                    Log.Error("Unable to access agent output folder. Aborting step");
-                    return;
-                }
-                
-                deviceFile = $"{deviceFolder}/{DateTime.UtcNow.ToString("yyMMdd_HHmmss")}.log";
+                deviceFile = $"{filePrefix}_{DateTime.UtcNow.ToString("yyMMdd_HHmmss")}.log";
 
                 logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
                     filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
@@ -142,31 +135,6 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
                     }
                 }
                 TapThread.Sleep(500);
-            }
-        }
-
-        private bool ensureFolder(AdbInstrument adb, string folder)
-        {
-            AdbCommandResult result = adb.ExecuteAdbCommand($"shell \"ls {folder}\"", DeviceId, retries: 0);
-            string output = (result.Output.Count != 0) ? result.Output[0] : "";
-
-            if (!result.Success && output.Contains("No such file"))
-            {
-                Log.Info("Agent output folder not found. Creating");
-
-                result = adb.ExecuteAdbCommand($"shell \"mkdir {folder}\"", DeviceId, retries: 0);
-
-                if (result.Success == false)
-                {
-                    Log.Error("Could not create agent output folder.");
-                    return false;
-                }
-
-                return true;
-            }
-            else
-            {
-                return result.Success;
             }
         }
 
