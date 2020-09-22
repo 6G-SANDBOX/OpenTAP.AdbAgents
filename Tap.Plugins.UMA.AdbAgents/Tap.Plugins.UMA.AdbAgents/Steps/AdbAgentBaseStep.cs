@@ -9,13 +9,14 @@ using Tap.Plugins.UMA.Android.Instruments;
 using Tap.Plugins.UMA.Android.Instruments.Logcat;
 using Tap.Plugins.UMA.Extensions;
 using Tap.Plugins.UMA.AdbAgents.Results;
+using System.IO;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
     [AllowAnyChild]
     public abstract class AdbAgentBaseStep : MeasurementStepBase
     {
-        public enum ActionEnum { Start, Measure, Stop };
+        public enum ActionEnum { Start, Measure, Stop, [Display("Parse file offline")] ParseOffline };
 
         [Display(Name: "Device ID",
                 Description: "The ID of the device to which this command will be sent.\n" +
@@ -49,6 +50,11 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         [EnabledIf("Action", ActionEnum.Measure, ActionEnum.Stop, HideIfDisabled = true)]
         public bool DeleteLogcatFiles {get; set;}
 
+        [Display("Agent output file", Order: 2.5)]
+        [FilePath(FilePathAttribute.BehaviorChoice.Open, "txt")]
+        [EnabledIf("Action", ActionEnum.ParseOffline, HideIfDisabled = true)]
+        public string AgentFile { get; set; }
+
         [Output]
         [XmlIgnore]
         public BackgroundLogcat LogcatOutput { get; set; }
@@ -72,69 +78,91 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         protected void DoRun(AdbInstrument adb, string filePrefix, string agentTag)
         {
-            BackgroundLogcat logcat;
-            string deviceFile;
-
-            // Prepare logcat
-            if (Action == ActionEnum.Start || Action == ActionEnum.Measure)
+            if (Action == ActionEnum.ParseOffline)
             {
-                deviceFile = $"{filePrefix}_{DateTime.UtcNow.ToString("yyMMdd_HHmmss")}.log";
+                string[] lines;
 
-                logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
-                    filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
-                
-                logcat.StartTime = logcat.StartTime.AddSeconds(-LogcatThreshold);
-
-                // Set the created logcat as output
-                if (Action == ActionEnum.Start)
+                try { lines = File.ReadAllLines(AgentFile); }
+                catch (Exception e)
                 {
-                    LogcatOutput = logcat;
+                    Log.Error($"Could not read file '{AgentFile}' contents: {e.ToString()}");
+                    return;
                 }
 
-                StartAgent();
+                // Disguise as logcat lines
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    lines[i] = $"12-31 23:59:59.999.fluff.{lines[i]}";
+                }
+
+                ParseResults(lines, DateTime.MinValue);
             }
             else
             {
-                logcat = LogcatInput.Value;
-                deviceFile = logcat.DeviceFilename;  // Overwrite with the file name received from the input.
-            }
+                BackgroundLogcat logcat;
+                string deviceFile;
 
-            // Measure
-            if (Action == ActionEnum.Measure)
-            {
-                MeasurementWait();
-            }
-
-            // Retrieve results
-            if (Action == ActionEnum.Measure || Action == ActionEnum.Stop)
-            {
-                StopAgent();
-                TapThread.Sleep(500);
-
-                logcat.Terminate();
-                TapThread.Sleep(500);
-
-                var result = logcat.AdbProcess.Result;
-
-                Log.Debug($"Success -> {result.Success}, Length: {result.Output.Count}");
-                foreach (string line in result.Output)
+                // Prepare logcat
+                if (Action == ActionEnum.Start || Action == ActionEnum.Measure)
                 {
-                    Log.Debug(line);
-                }
+                    deviceFile = $"{filePrefix}_{DateTime.UtcNow.ToString("yyMMdd_HHmmss")}.log";
 
-                if (ParseLogcatFiles)
-                {
-                    string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
-                    TapThread.Sleep(500);
-                    ParseResults(res, logcat.StartTime);
+                    logcat = adb.ExecuteBackgroundLogcat(deviceFile, DeviceId,
+                        filter: LogcatFilter.CreateSingleTagFilter(agentTag, LogcatPriority.Info));
 
-                    if (DeleteLogcatFiles)
+                    logcat.StartTime = logcat.StartTime.AddSeconds(-LogcatThreshold);
+
+                    // Set the created logcat as output
+                    if (Action == ActionEnum.Start)
                     {
-                        TapThread.Sleep(1000);
-                        adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
+                        LogcatOutput = logcat;
                     }
+
+                    StartAgent();
                 }
-                TapThread.Sleep(500);
+                else
+                {
+                    logcat = LogcatInput.Value;
+                    deviceFile = logcat.DeviceFilename;  // Overwrite with the file name received from the input.
+                }
+
+                // Measure
+                if (Action == ActionEnum.Measure)
+                {
+                    MeasurementWait();
+                }
+
+                // Retrieve results
+                if (Action == ActionEnum.Measure || Action == ActionEnum.Stop)
+                {
+                    StopAgent();
+                    TapThread.Sleep(500);
+
+                    logcat.Terminate();
+                    TapThread.Sleep(500);
+
+                    var result = logcat.AdbProcess.Result;
+
+                    Log.Debug($"Success -> {result.Success}, Length: {result.Output.Count}");
+                    foreach (string line in result.Output)
+                    {
+                        Log.Debug(line);
+                    }
+
+                    if (ParseLogcatFiles)
+                    {
+                        string[] res = adb.RetrieveLogcat(logcat, localFilename: null);
+                        TapThread.Sleep(500);
+                        ParseResults(res, logcat.StartTime);
+
+                        if (DeleteLogcatFiles)
+                        {
+                            TapThread.Sleep(1000);
+                            adb.DeleteExistingDeviceLogcatFiles(deviceFile, DeviceId);
+                        }
+                    }
+                    TapThread.Sleep(500);
+                }
             }
         }
 

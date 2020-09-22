@@ -81,13 +81,13 @@
     <None Include="AdbAgents\Agents\Android Resource Agent Documentation.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="AdbAgents\Agents\com.uma.iperf.1.0.1.apk">
+    <None Include="AdbAgents\Agents\com.uma.iperf.1.0.2.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="AdbAgents\Agents\com.uma.ping.1.0.1.apk">
+    <None Include="AdbAgents\Agents\com.uma.ping.1.0.2.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.2.apk">
+    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.4.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
