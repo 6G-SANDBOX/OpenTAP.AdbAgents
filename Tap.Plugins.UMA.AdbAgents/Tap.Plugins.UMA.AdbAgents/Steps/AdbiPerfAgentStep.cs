@@ -28,41 +28,44 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         [XmlIgnore]
         public bool HasParameters { get { return (Action == ActionEnum.Start || Action == ActionEnum.Measure); } }
 
-        [Display("Role", Group: "Parameters", Order: 2.0)]
-        public RoleEnum Role { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [EnabledIf("Role", RoleEnum.Client, HideIfDisabled = true)]
-        [Display("Host", Group: "Parameters", Order: 2.1)]
-        public string Host { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Port", Group: "Parameters", Order: 2.2)]
-        public int Port { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Parallel", Group: "Parameters", Order: 2.3)]
-        public int Parallel { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("UDP", Group: "Parameters", Order: 2.4)]
-        public bool Udp { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Report interval", Group: "Parameters", Order: 2.5)]
-        [Unit("s")]
-        public int Interval { get; set; }
-
-        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
-        [Display("Extra Parameters", Group: "Parameters", Order: 2.6,
-            Description: "Extra parameters to pass to iPerf. Separate parameters with ';', separate keys/values with space\n" +
-                         "Example: '-P 4; -B 192.168.2.1'")]
-        public string ExtraParameters { get; set; }
-
         #region Measurement
 
         // Measurement properties have order 50.0 and 50.1
         public override bool HideMeasurement { get { return Action != ActionEnum.Measure; } }
+
+        [Display("Role", Group: "Parameters", Order: 3.0)]
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        public RoleEnum Role { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [EnabledIf("Role", RoleEnum.Client, HideIfDisabled = true)]
+        [Display("Host", Group: "Parameters", Order: 3.1)]
+        public string Host { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Port", Group: "Parameters", Order: 3.2)]
+        public int Port { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Parallel", Group: "Parameters", Order: 3.3)]
+        public int Parallel { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("UDP", Group: "Parameters", Order: 3.4)]
+        public bool Udp { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Report interval", Group: "Parameters", Order: 3.5)]
+        [Unit("s")]
+        public int Interval { get; set; }
+
+        [EnabledIf("HasParameters", true, HideIfDisabled = true)]
+        [Display("Extra Parameters", Group: "Parameters", Order: 3.6,
+            Description: "Extra parameters to pass to iPerf. Separate parameters with ';', separate keys/values with space\n" +
+                         "Example: '-P 4; -B 192.168.2.1'")]
+        public string ExtraParameters { get; set; }
+
+
 
         #endregion
 
