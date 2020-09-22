@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml.Serialization;
 using OpenTap;
 using Tap.Plugins.UMA.AdbAgents.Instruments;
@@ -92,6 +93,24 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         public override void Run()
         {
+            if (Action == ActionEnum.ParseOffline)
+            {
+                string filename = Path.GetFileNameWithoutExtension(AgentFile);
+                if (filename.StartsWith("Client"))
+                {
+                    Role = RoleEnum.Client;
+                }
+                else if (filename.StartsWith("Server"))
+                {
+                    Role = RoleEnum.Server;
+                }
+                else
+                {
+                    Log.Error($"Could not obtain iPerf role from filename '{AgentFile}'. Aborting.");
+                    return;
+                }
+            }
+
             DoRun(Instrument.Adb,
                 (Role == RoleEnum.Client) ? DEVICE_FILE_CLIENT : DEVICE_FILE_SERVER, 
                 (Role == RoleEnum.Client) ? AGENT_TAG_CLIENT : AGENT_TAG_SERVER);
