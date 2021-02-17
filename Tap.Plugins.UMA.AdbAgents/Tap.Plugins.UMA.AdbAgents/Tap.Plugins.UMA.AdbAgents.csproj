@@ -1,112 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <StartAction>Program</StartAction>
-    <StartProgram>$(TAP_PATH)\Editor.exe</StartProgram>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7F86F12C-9EBC-4DF2-80F2-7651061FA76E}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tap.Plugins.UMA.AdbAgents</RootNamespace>
-    <AssemblyName>Tap.Plugins.UMA.AdbAgents</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(TAP_PATH)\UMA\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(TAP_PATH)\UMA\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTap, Version=9.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TAP_PATH)\OpenTap.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Tap.Plugins.UMA.Android, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(TAP_PATH)\UMA\Tap.Plugins.UMA.Android.dll</HintPath>
-    </Reference>
+    <PackageReference Include="OpenTAP" Version="9.12.3" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Extensions\DoubleExtensions.cs" />
-    <Compile Include="Extensions\ResultTableExtensions.cs" />
-    <Compile Include="Extensions\SecureStringExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Instruments\iPerfAgentInstrument.cs" />
-    <Compile Include="Instruments\PingAgentInstrument.cs" />
-    <Compile Include="Instruments\ExoplayerInstrument.cs" />
-    <Compile Include="Instruments\ResourceAgentInstrument.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Instruments\ExoplayerResultHandler.cs" />
-    <Compile Include="Results\ExoplayerResult.cs" />
-    <Compile Include="Results\iPerfResult.cs" />
-    <Compile Include="Results\PingResult.cs" />
-    <Compile Include="Results\ResultBase.cs" />
-    <Compile Include="Steps\AdbAgentBaseStep.cs" />
-    <Compile Include="Steps\AdbiPerfAgentStep.cs" />
-    <Compile Include="Steps\AdbExoplayerStep.cs" />
-    <Compile Include="Steps\AdbPingAgentStep.cs" />
-    <Compile Include="Steps\AdbResourceAgentStep.cs" />
-    <Compile Include="Steps\MeasurementStepBase.cs" />
-    <Compile Include="Results\ResourcesResult.cs" />
-    <None Include="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\Android Ping Agent Documentation.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\Android Resource Agent Documentation.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\com.uma.iperf.1.0.2.apk">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\com.uma.ping.1.0.2.apk">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\com.uma.resourceAgent.1.0.4.apk">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="AdbAgents\Example.TapPlan">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="package.xml" />
+    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)\UMA.Android.1.0.3.TapPackage" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <UsingTask TaskName="Keysight.OpenTap.Sdk.MSBuild.PackageTask" AssemblyFile="$(TAP_PATH)\Packages\SDK\Keysight.OpenTap.Sdk.MSBuild.dll" />
-  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Debug'">
-    <PackageTask Dir="$(TAP_PATH)" ConfFile="$(ProjectDir)\package.xml" Build="None" />
-  </Target>
-  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
-    <PackageTask Dir="$(TAP_PATH)" ConfFile="$(ProjectDir)\package.xml" />
-  </Target>
+  <ItemGroup>
+    <None Update="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\Android Ping Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\Android Resource Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\com.uma.iperf.1.0.2.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\com.uma.ping.1.0.2.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\com.uma.resourceAgent.1.0.4.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="AdbAgents\Example.TapPlan">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
