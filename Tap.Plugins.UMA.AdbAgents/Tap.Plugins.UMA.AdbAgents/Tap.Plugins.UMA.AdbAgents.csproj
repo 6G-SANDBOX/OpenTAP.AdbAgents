@@ -6,10 +6,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTAP" Version="9.12.3" />
+    <PackageReference Include="OpenTAP" Version="9.*"/>
   </ItemGroup>
   <ItemGroup>
-    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)\UMA.Android.1.0.3.TapPackage" />
+    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)" Version="^1.0.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
