@@ -56,7 +56,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
         public string AgentFile { get; set; }
 
         [Output]
-        //[XmlIgnore]
+        [XmlIgnore]
         public BackgroundLogcat LogcatOutput { get; set; }
 
         public override bool HideMeasurement { get { return Action != ActionEnum.Measure; } }

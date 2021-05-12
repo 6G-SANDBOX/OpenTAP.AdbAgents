@@ -26,7 +26,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Steps
 
         #region Parameters
 
-        //[XmlIgnore]
+        [XmlIgnore]
         public bool HasParameters { get { return (Action == ActionEnum.Start || Action == ActionEnum.Measure); } }
 
         #region Measurement
