@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -10,7 +10,7 @@
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)" Version="^1.0.3" />
+    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)" Version="^1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <None Update="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
@@ -22,13 +22,13 @@
     <None Update="AdbAgents\Agents\Android Resource Agent Documentation.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="AdbAgents\Agents\com.uma.iperf.1.0.2.apk">
+    <None Update="AdbAgents\Agents\com.uma.iperf.1.0.3.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="AdbAgents\Agents\com.uma.ping.1.0.2.apk">
+    <None Update="AdbAgents\Agents\com.uma.ping.1.0.3.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="AdbAgents\Agents\com.uma.resourceAgent.1.0.4.apk">
+    <None Update="AdbAgents\Agents\com.uma.resourceAgent.1.0.5.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
