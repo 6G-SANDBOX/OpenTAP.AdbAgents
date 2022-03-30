@@ -15,7 +15,9 @@ namespace Tap.Plugins.UMA.AdbAgents.Results
             new Tuple<string, string, string>(
                 "Time to load first media frame", "Media File Playback - Start", "Media File Playback - First Picture"),
             new Tuple<string, string, string>(
-                "Open the AUT", "App Initialization Start - Login Not Required", "App Started")
+                "Open the AUT", "App Initialization Start - Login Not Required", "App Started"),
+            new Tuple<string, string, string>(
+                "Content stall", "Media File Playback - Content Stall Start", "Media File Playback - Content Stall End")
         };
 
         private class MeasurementPoint
