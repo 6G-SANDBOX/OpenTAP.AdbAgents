@@ -8,7 +8,7 @@ For Version and Configuration the following macros are available (Only works if 
 $(GitVersion) - Gets the version from Git.
 -->
 <Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" OS="Windows,Linux,OSX"
-         Version="1.2.13">
+         Version="1.2.14">
   <Description>Adb Agents plugin. Requires Tap.Plugins.UMA.Android</Description>
   <Dependencies>
     <PackageDependency Package="UMA.Android" Version="^1.0.6" />
