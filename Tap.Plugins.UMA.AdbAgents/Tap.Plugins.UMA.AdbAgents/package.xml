@@ -8,7 +8,7 @@ For Version and Configuration the following macros are available (Only works if 
 $(GitVersion) - Gets the version from Git.
 -->
 <Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" OS="Windows,Linux,OSX"
-         Version="1.2.14">
+         Version="1.2.15">
   <Description>Adb Agents plugin. Requires Tap.Plugins.UMA.Android</Description>
   <Dependencies>
     <PackageDependency Package="UMA.Android" Version="^1.0.6" />
@@ -25,7 +25,7 @@ $(GitVersion) - Gets the version from Git.
     <File Path="AdbAgents/Agents/com.uma.ping.1.0.3.apk"/>
     <File Path="AdbAgents/Agents/com.uma.resourceAgent.1.0.5.apk"/>
     <File Path="AdbAgents/Agents/Exoplayer Agent Documentation.docx"/>
-    <File Path="AdbAgents/Agents/ExoPlayer_Release2_Inst_190902.apk"/>
+    <File Path="AdbAgents/Agents/ExoPlayer_Release2_Inst_230411.apk"/>
 
     <File Path="AdbAgents/Example.TapPlan"/>
   </Files>

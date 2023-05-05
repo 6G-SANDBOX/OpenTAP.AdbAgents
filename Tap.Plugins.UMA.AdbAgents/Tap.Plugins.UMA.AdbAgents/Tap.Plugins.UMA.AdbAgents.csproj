@@ -34,7 +34,7 @@
     <None Update="AdbAgents\Agents\Exoplayer Agent Documentation.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="AdbAgents\Agents\ExoPlayer_Release2_Inst_190902.apk">
+    <None Update="AdbAgents\Agents\ExoPlayer_Release2_Inst_230411.apk">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="AdbAgents\Example.TapPlan">
