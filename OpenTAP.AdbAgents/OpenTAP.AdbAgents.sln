@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tap.Plugins.UMA.AdbAgents", "Tap.Plugins.UMA.AdbAgents\Tap.Plugins.UMA.AdbAgents.csproj", "{7F86F12C-9EBC-4DF2-80F2-7651061FA76E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTAP.AdbAgents", "OpenTAP.AdbAgents\OpenTAP.AdbAgents.csproj", "{7F86F12C-9EBC-4DF2-80F2-7651061FA76E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

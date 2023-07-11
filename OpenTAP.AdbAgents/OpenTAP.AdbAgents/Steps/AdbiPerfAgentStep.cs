@@ -1,4 +1,4 @@
-﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
+﻿// Author:      Bruno Garcia Garcia <bgg@uma.es>
 // Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
 
 using System;
@@ -13,7 +13,7 @@ using RoleEnum = Tap.Plugins.UMA.AdbAgents.Instruments.iPerfAgentInstrument.Role
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
-    [Display("Adb iPerf Agent", Groups: new string[] { "UMA", "Agents" })]
+    [Display("Adb iPerf Agent", Groups: new string[] { "Adb Agents" })]
     public class AdbiPerfAgentStep : AdbAgentBaseStep
     {
         private static readonly string DEVICE_FILE_CLIENT = "sdcard/adb_iperf_agent_client";

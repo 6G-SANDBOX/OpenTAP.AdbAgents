@@ -2,16 +2,23 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>false</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsWindows)'=='True'">
+	  <AdditionalOpenTapPackage Include="Developer's System CE" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="OpenTAP" Version="9.*" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <OpenTapPackageReference Include="UMA.Android" Repository="$(TAP_PATH)" Version="^1.0.6" />
+	  <OpenTapPackageReference Include="Android Debug Bridge" Version="^1.0.7" />
   </ItemGroup>
+	
   <ItemGroup>
     <None Update="AdbAgents\Agents\Android iPerf Agent Documentation.docx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

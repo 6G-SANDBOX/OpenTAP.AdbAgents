@@ -1,4 +1,4 @@
-﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
+﻿// Author:      Bruno Garcia Garcia <bgg@uma.es>
 // Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
 
 using System;
@@ -10,7 +10,7 @@ using Tap.Plugins.UMA.Extensions;
 
 namespace Tap.Plugins.UMA.AdbAgents.Steps
 {
-    [Display("Adb Ping Agent", Groups: new string[] { "UMA", "Agents" })]
+    [Display("Adb Ping Agent", Groups: new string[] { "Adb Agents" })]
     public class AdbPingAgentStep : AdbAgentBaseStep
     {
         private static readonly string DEVICE_FILE = "sdcard/adb_ping_agent";
