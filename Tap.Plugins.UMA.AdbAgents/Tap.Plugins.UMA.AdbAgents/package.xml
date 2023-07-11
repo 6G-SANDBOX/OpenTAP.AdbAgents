@@ -7,26 +7,35 @@ Configuration: Can be any kind of information, such as bit version or git branch
 For Version and Configuration the following macros are available (Only works if the project directory is under Git source control):
 $(GitVersion) - Gets the version from Git.
 -->
-<Package Name="UMA.AdbAgents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/" OS="Windows,Linux,OSX"
-         Version="1.2.16">
-  <Description>Adb Agents plugin. Requires Tap.Plugins.UMA.Android</Description>
-  <Dependencies>
-	<PackageDependency Package="Android Debug Bridge" Version="^1.0.7" />
-  </Dependencies>
-  <Files>
-    <File Path="Tap.Plugins.UMA.AdbAgents.dll">
-      <SetAssemblyInfo Attributes="Version"/>
-    </File>
-    
-    <File Path="AdbAgents/Agents/Android iPerf Agent Documentation.docx"/>
-    <File Path="AdbAgents/Agents/Android Ping Agent Documentation.docx"/>
-    <File Path="AdbAgents/Agents/Android Resource Agent Documentation.docx"/>
-    <File Path="AdbAgents/Agents/com.uma.iperf.1.0.3.apk"/>
-    <File Path="AdbAgents/Agents/com.uma.ping.1.0.3.apk"/>
-    <File Path="AdbAgents/Agents/com.uma.resourceAgent.1.0.5.apk"/>
-    <File Path="AdbAgents/Agents/Exoplayer Agent Documentation.docx"/>
-    <File Path="AdbAgents/Agents/ExoPlayer_Release2_Inst_230411.apk"/>
+<Package Name="Adb Agents" xmlns="http://opentap.io/schemas/package" InfoLink="https://morse.uma.es/"
+		 OS="Windows,Linux,OSX" Version="1.2.16">
+	<Description>
+		Adb Agents plugin. Requires 'Android Debug Bridge'
+		<Organisation>University of Malaga</Organisation>
+	</Description>
 
-    <File Path="AdbAgents/Example.TapPlan"/>
-  </Files>
+	<Owner>ITIS UMA</Owner>
+	<SourceUrl>https://github.com/6G-SANDBOX/OpenTAP.AdbAgents</SourceUrl>
+	<SourceLicense>Apache-2.0</SourceLicense>
+
+    <Dependencies>
+	    <PackageDependency Package="Android Debug Bridge" Version="^1.0.7" />
+    </Dependencies>
+
+	<Files>
+        <File Path="Tap.Plugins.UMA.AdbAgents.dll">
+            <SetAssemblyInfo Attributes="Version"/>
+        </File>
+    
+        <File Path="AdbAgents/Agents/Android iPerf Agent Documentation.docx"/>
+        <File Path="AdbAgents/Agents/Android Ping Agent Documentation.docx"/>
+        <File Path="AdbAgents/Agents/Android Resource Agent Documentation.docx"/>
+        <File Path="AdbAgents/Agents/com.uma.iperf.1.0.3.apk"/>
+        <File Path="AdbAgents/Agents/com.uma.ping.1.0.3.apk"/>
+        <File Path="AdbAgents/Agents/com.uma.resourceAgent.1.0.5.apk"/>
+        <File Path="AdbAgents/Agents/Exoplayer Agent Documentation.docx"/>
+        <File Path="AdbAgents/Agents/ExoPlayer_Release2_Inst_230411.apk"/>
+
+        <File Path="AdbAgents/Example.TapPlan"/>
+    </Files>
 </Package>
