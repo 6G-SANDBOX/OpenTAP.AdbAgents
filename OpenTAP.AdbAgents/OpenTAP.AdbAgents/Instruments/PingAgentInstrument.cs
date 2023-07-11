@@ -1,4 +1,4 @@
-﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
+﻿// Author:      Bruno Garcia Garcia <bgg@uma.es>
 // Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
 
 using OpenTap;
@@ -6,7 +6,7 @@ using Tap.Plugins.UMA.Android.Instruments;
 
 namespace Tap.Plugins.UMA.AdbAgents.Instruments
 {
-    [Display("Ping Agent", Groups: new string[] { "UMA", "Adb Agents" },
+    [Display("Ping Agent", Groups: new string[] { "Adb Agents" },
         Description: "Instrument for controlling the Adb Ping Agent")]
     public class PingAgentInstrument : Instrument
     {

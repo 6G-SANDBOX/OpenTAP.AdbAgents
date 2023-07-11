@@ -1,4 +1,4 @@
-﻿// Author:      Bruno Garcia Garcia <bgarcia@lcc.uma.es>
+﻿// Author:      Bruno Garcia Garcia <bgg@uma.es>
 // Copyright:   Copyright 2019-2022 Universidad de Málaga (University of Málaga), Spain
 
 using System;
@@ -33,7 +33,7 @@ namespace Tap.Plugins.UMA.AdbAgents.Instruments
         }
     }
 
-    [Display("Exoplayer", Groups: new string[] { "UMA", "Adb Agents" },
+    [Display("Exoplayer", Groups: new string[] { "Adb Agents" },
         Description: "Instrument for controlling the Exoplayer")]
     public class ExoplayerInstrument: Instrument
     {
